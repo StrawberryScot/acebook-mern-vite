@@ -1,0 +1,9 @@
+// This file helps VSCode to understand our project, and make helpful
+// suggestions, such as imports, code completion, etc.
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "jsx": "react-jsx"
+  },
+  "exclude": ["node_modules", "**/node_modules/*"]
+}
