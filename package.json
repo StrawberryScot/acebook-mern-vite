@@ -1,33 +1,15 @@
 {
-  "name": "makers-react-template",
-  "private": true,
-  "version": "0.0.1",
-  "type": "module",
+  "Note": "This is a dummy package.json file to prevent accidental installation or running of packages in the wrong location",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "test": "vitest"
+    "dev": "echo 'You are in the wrong directory. cd to api or frontend folder to run this command'",
+    "start": "echo 'You are in the wrong directory. cd to api or frontend folder to run this command'",
+    "build": "echo 'You are in the wrong directory. cd to api or frontend folder to run this command'",
+    "lint": "echo 'You are in the wrong directory. cd to api or frontend folder to run this command'",
+    "preview": "echo 'You are in the wrong directory. cd to api or frontend folder to run this command'",
+    "test": "echo 'You are in the wrong directory. cd to api or frontend folder to run this command'",
+    "preinstall": "echo \"You are in the wrong directory. cd to api or frontend folder to run this command\" && exit 1"
   },
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/user-event": "^14.5.2",
-    "@types/react": "^18.0.28",
-    "@types/react-dom": "^18.0.11",
-    "@vitejs/plugin-react": "^4.3.1",
-    "eslint": "^9.11.1",
-    "eslint-plugin-react": "^7.32.2",
-    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
-    "eslint-plugin-react-refresh": "^0.4.9",
-    "globals": "^15.9.0",
-    "jsdom": "^22.0.0",
-    "vite": "^4.3.2",
-    "vitest": "^0.31.1"
+  "engines": {
+    "npm": "YOU ARE IN THE WRONG DIRECTORY! cd to api or frontend folder to run this command"
   }
 }
