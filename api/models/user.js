@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema({
   lastName: { type: String, required: true },
   profilePicPath: { type: String, default: "", required: false },
   friends: { type: [String], default: [], required: false },
-  status: { type: [String], default: "Online", required: false },
+  status: { type: String, default: "Online", required: false },
   backgroundPicPath: { type: String, default: "", required: false },
   isOnlyFriends: { type: Boolean, default: false, required: false },
 });

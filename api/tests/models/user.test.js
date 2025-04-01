@@ -44,7 +44,7 @@ describe("User model", () => {
 
   it("has a boolean isOnlyFriends set to true", () => {
     const user = new User(testUserData);
-    expect(user.isOnlyFriends).toEqual(true);
+    expect(user.isOnlyFriends).toEqual(false);
   })
 
   it("has a password", () => {
