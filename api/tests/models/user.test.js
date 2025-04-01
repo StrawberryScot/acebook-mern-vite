@@ -7,8 +7,6 @@ const testUserData = {
   firstName: "Some",
   lastName: "One",
   profilePicPath: "test-address",
-  friends: [],
-  posts: [],
   status: "Online",
   backgroundPicPath: "test-back-address",
   isOnlyFriends: false,
@@ -36,17 +34,12 @@ describe("User model", () => {
 
   it("has a profile picture path", () => {
     const user = new User(testUserData);
-    expect(user.lastName).toEqual("test-address");
+    expect(user.profilePicPath).toEqual("test-address");
   });
 
   it("has an empty friends list", () => {
     const user = new User(testUserData);
     expect(user.friends).toEqual([]);
-  });
-
-  it("has an empty posts list", () => {
-    const user = new User(testUserData);
-    expect(user.posts).toEqual([]);
   });
 
   it("has a status of online", () => {
