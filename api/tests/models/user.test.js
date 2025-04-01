@@ -1,17 +1,6 @@
 require("../mongodb_helper");
 const User = require("../../models/user");
 
-const testUserData = {
-  email: "someone@example.com",
-  password: "password",
-  firstName: "Some",
-  lastName: "One",
-  profilePicPath: "test-address",
-  status: "Online",
-  backgroundPicPath: "test-back-address",
-  isOnlyFriends: false,
-}
-
 describe("User model", () => {
   beforeEach(async () => {
     await User.deleteMany({});

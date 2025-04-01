@@ -4,6 +4,7 @@ const JWT = require("jsonwebtoken");
 const app = require("../../app");
 const Post = require("../../models/post");
 const User = require("../../models/user");
+const testUserData = require("../userDataForTest");
 
 require("../mongodb_helper");
 
@@ -25,10 +26,9 @@ function createToken(userId) {
 let token;
 describe("/posts", () => {
   beforeAll(async () => {
-    const user = new User({
-      email: "post-test@test.com",
-      password: "12345678",
-    });
+    testUserData.email = "post-test@test.com",
+    testUserData.password = "12345678";
+    const user = new User(testUserData);
     await user.save();
     await Post.deleteMany({});
     token = createToken(user.id);
