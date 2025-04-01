@@ -10,14 +10,14 @@ describe("Express error handling", () => {
   });
 
   test("should return 500 and error message in development mode", async () => {
-    process.env.NODE_ENV === "development";
+    // process.env.NODE_ENV = "development";
     const res = await request(app).get("/error");
     expect(res.status).toBe(500);
     expect(res.text).toBe("Test error");
   });
 
   test("should return generic error message in production mode", async () => {
-    process.env.NODE_ENV === "production";
+    // process.env.NODE_ENV = "production";
     const res = await request(app).get("/error");
     expect(res.status).toBe(500);
     expect(res.body).toEqual({ err: "Something went wrong" });
