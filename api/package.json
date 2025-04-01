@@ -6,7 +6,18 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
-    "test": "jest"
+    "test": "jest",
+    "coverage": "jest --coverage"
+  },
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "statements": 75,
+        "branches": 75,
+        "functions": 75,
+        "lines": 75
+      }
+    }
   },
   "author": "Makers Academy",
   "license": "CC-BY-NC-SA-4.0",
