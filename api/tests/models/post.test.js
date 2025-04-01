@@ -20,6 +20,7 @@ describe("Post model", () => {
     expect(post.comments).toEqual([]);
   });
 
+
   it("requires postedBy", () => {
     const post = new Post({
       text: "Hello",
