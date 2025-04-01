@@ -1,5 +1,5 @@
 const testPostData = {
-    postedBy: putUserIdHere,
+    postedBy: null,
     text: "some message",
     imagePath: "",
     likes: [],

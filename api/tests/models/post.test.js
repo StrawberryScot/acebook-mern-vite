@@ -10,7 +10,7 @@ describe("Post model", () => {
 
   it("has a message", () => {
     const post = new Post(testPostData);
-    expect(post.message).toEqual("some message");
+    expect(post.text).toEqual("some message");
   });
 
   it("can list all posts", async () => {
@@ -23,6 +23,6 @@ describe("Post model", () => {
 
     await post.save();
     const posts = await Post.find();
-    expect(posts[0].message).toEqual("some message");
+    expect(posts[0].text).toEqual("some message");
   });
 });
