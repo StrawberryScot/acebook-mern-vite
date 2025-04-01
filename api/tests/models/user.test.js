@@ -1,4 +1,5 @@
 require("../mongodb_helper");
+const testUserData = require("../userDataForTest");
 const User = require("../../models/user");
 
 describe("User model", () => {
