@@ -8,3 +8,11 @@ const config = {
 };
 
 module.exports = config;
+
+module.exports = {
+  coverageThreshold: {
+      global: {
+          lines: 80,
+      },
+  },
+};
