@@ -99,7 +99,24 @@ describe("authentication service", () => {
       expect(token).toEqual(undefined);
     });
 
-    test("throws an error if the request failed", async () => {
+    test("If there is no custom error set, we default to error message set in authentication.js", async () => {
+      const testEmail = "test@testEmail.com";
+      const testPassword = "12345678";
+
+      fetch.mockResponseOnce(JSON.stringify({ message: "" }), {
+        status: 400,
+      });
+
+      try {
+        await signup(testEmail, testPassword);
+      } catch (err) {
+        expect(err.message).toEqual(
+          "Received status 400 when signing up. Expected 201"
+        );
+      }
+    });
+
+    test("throws a custom error if set", async () => {
       const testEmail = "test@testEmail.com";
       const testPassword = "12345678";
 
@@ -113,9 +130,7 @@ describe("authentication service", () => {
       try {
         await signup(testEmail, testPassword);
       } catch (err) {
-        expect(err.message).toEqual(
-          "Received status 400 when signing up. Expected 201"
-        );
+        expect(err.message).toEqual("User already exists");
       }
     });
   });
