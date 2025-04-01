@@ -1,5 +1,5 @@
 require("../mongodb_helper");
-const testUserData = require("../userDataForTest");
+const testPostData = require("../postDataForTest");
 
 const Post = require("../../models/post");
 
@@ -9,7 +9,7 @@ describe("Post model", () => {
   });
 
   it("has a message", () => {
-    const post = new Post({ message: "some message" });
+    const post = new Post(testPostData);
     expect(post.message).toEqual("some message");
   });
 
@@ -19,7 +19,7 @@ describe("Post model", () => {
   });
 
   it("can save a post", async () => {
-    const post = new Post({ message: "some message" });
+    const post = new Post(testPostData);
 
     await post.save();
     const posts = await Post.find();
