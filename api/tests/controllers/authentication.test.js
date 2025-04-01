@@ -2,13 +2,13 @@ const app = require("../../app");
 const supertest = require("supertest");
 require("../mongodb_helper");
 const User = require("../../models/user");
+const testUserData = require("../userDataForTest");
 
 describe("/tokens", () => {
   beforeAll(async () => {
-    const user = new User({
-      email: "auth-test@test.com",
-      password: "12345678",
-    });
+    testUserData.email = "auth-test@test.com";
+    testUserData.password = "12345678";
+    const user = new User(testUserData);
 
     // We need to use `await` so that the "beforeAll" setup function waits for
     // the asynchronous user.save() to be done before exiting.

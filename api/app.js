@@ -22,6 +22,11 @@ app.use("/users", usersRouter);
 app.use("/posts", tokenChecker, postsRouter);
 app.use("/tokens", authenticationRouter);
 
+// Middleware to simulate an error
+app.use("/error", (_req, _res, next) => {
+  next(new Error("Test error"));
+});
+
 // 404 Handler
 app.use((_req, res) => {
   res.status(404).json({ err: "Error 404: Not Found" });

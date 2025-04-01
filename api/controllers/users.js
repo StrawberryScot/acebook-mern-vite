@@ -5,6 +5,10 @@ const { validateEmail } = require("../middleware/emailValidator");
 function create(req, res) {
   const email = req.body.email;
   const password = req.body.password;
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
+  
+  const user = new User({ email, password, firstName, lastName});
 
   // imported email validator - requires field to be filled in and an email char "@":
   const emailValidation = validateEmail(email);
@@ -18,7 +22,6 @@ function create(req, res) {
     return res.status(400).json({ message: passwordValidation.message });
   }
 
-  const user = new User({ email, password });
   user
     .save()
     .then((user) => {
