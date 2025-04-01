@@ -49,6 +49,7 @@ jobs:
         if: github.event_name == 'pull_request' 
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:
-          path: './api/coverage/coverage-final.json'  # Path to your Jest coverage summary JSON
-          coverageThreshold: '75'  # Set the threshold (80% coverage in this case)
-          failOnThreshold: true
+           github-token: ${{ secrets.GITHUB_TOKEN }}
+           threshold: 75 # Overall threshold
+           working-directory: ./api
+           test-script: npm run coverage
