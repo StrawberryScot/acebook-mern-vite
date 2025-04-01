@@ -27,7 +27,7 @@ jobs:
            cd frontend
            npm install
            npm run build --if-present
-           pm test
+           npm test
 
       - run: |
            cd api
