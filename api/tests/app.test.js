@@ -1,6 +1,6 @@
-require("./mongodb_helper");
 const request = require("supertest");
 const app = require("../app");
+require("./mongodb_helper");
 
 describe("Express error handling", () => {
   test("should return 404 for unknown routes", async () => {
