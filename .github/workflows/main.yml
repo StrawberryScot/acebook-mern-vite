@@ -1,7 +1,16 @@
 name: Node.js CI
 
-on: [push]
-
+on:
+    push:
+        branches:
+        - main
+    pull_request:
+        branches:
+        - main
+        
+permissions:
+    checks: write
+    
 jobs:
   build:
 
@@ -37,6 +46,7 @@ jobs:
            npm test -- --coverage
 
       - name: Check Jest Coverage
+        if: github.event_name === 'pull_request' 
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           path: './api/coverage/coverage-summary.json'  # Path to your Jest coverage summary JSON
