@@ -66,6 +66,6 @@ describe("User model", () => {
     expect(users[0].email).toEqual("someone@example.com");
     expect(users[0].password).toEqual("password");
     expect(users[0].firstName).toEqual("Some");
-    expect(users[0].password).toEqual("One");
+    expect(users[0].lastName).toEqual("One");
   });
 });
