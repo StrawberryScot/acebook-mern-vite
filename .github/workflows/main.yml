@@ -46,7 +46,7 @@ jobs:
            npm test -- --coverage
 
       - name: Check Jest Coverage
-        if: github.event_name === 'pull_request' 
+        if: github.event_name == 'pull_request' 
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           path: './api/coverage/coverage-summary.json'  # Path to your Jest coverage summary JSON
