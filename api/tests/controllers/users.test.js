@@ -51,6 +51,23 @@ describe("/users", () => {
       expect(response.body.message).toEqual("Email is required");
     });
 
+    test("returns status 400 when database save fails", async () => {
+      // Mock the User model's save method to throw an error
+      jest.spyOn(User.prototype, "save").mockImplementationOnce(() => {
+        return Promise.reject(new Error("Database connection error"));
+      });
+
+      const response = await request(app)
+        .post("/users")
+        .send({ email: "valid@email.com", password: "valid!password123" });
+
+      expect(response.statusCode).toBe(400);
+      expect(response.body.message).toEqual("Something went wrong");
+
+      // Restore the original implementation
+      User.prototype.save.mockRestore();
+    });
+
     test("the response code is 201 when password is longer than 8 char and has a special char", async () => {
       const response = await request(app)
         .post("/users")
