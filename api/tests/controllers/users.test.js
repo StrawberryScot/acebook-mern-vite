@@ -59,7 +59,12 @@ describe("/users", () => {
 
       const response = await request(app)
         .post("/users")
-        .send({ email: "valid@email.com", password: "valid!password123" });
+        .send({
+          email: "valid@email.com",
+          password: "valid!password123",
+          firstName: "John",
+          lastName: "Doe",
+        });
 
       expect(response.statusCode).toBe(400);
       expect(response.body.message).toEqual("Something went wrong");
