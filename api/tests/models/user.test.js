@@ -1,6 +1,7 @@
 require("../mongodb_helper");
 const testUserData = require("../userDataForTest");
 const User = require("../../models/user");
+const bcrypt = require("bcrypt");
 
 describe("User model", () => {
   beforeEach(async () => {
@@ -45,7 +46,7 @@ describe("User model", () => {
   it("has a boolean isOnlyFriends set to true", () => {
     const user = new User(testUserData);
     expect(user.isOnlyFriends).toEqual(false);
-  })
+  });
 
   it("has a password", () => {
     const user = new User(testUserData);
@@ -62,9 +63,12 @@ describe("User model", () => {
 
     await user.save();
     const users = await User.find();
+    const originalPassword = "password";
+    const isMatch = await bcrypt.compare(originalPassword, users[0].password);
+    expect(isMatch).toBeTruthy();
 
     expect(users[0].email).toEqual("someone@example.com");
-    expect(users[0].password).toEqual("password");
+
     expect(users[0].firstName).toEqual("Some");
     expect(users[0].lastName).toEqual("One");
   });
