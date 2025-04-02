@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const UserSchema = new mongoose.Schema({
+
   email: { 
     type: String, 
     required: true 
@@ -42,6 +44,25 @@ const UserSchema = new mongoose.Schema({
     default: false, 
     required: false 
   },
+
+});
+
+//hashing password before saving:
+const hashPassword = async (password) => {
+    const salt = await bcrypt.genSalt(10);
+    return await bcrypt.hash(password, salt);
+};
+UserSchema.pre("save", async function (next) {
+    if (!this.isModified("password")) {
+        return next();
+    }
+    try {
+        this.password = await hashPassword(this.password);
+        next();
+    } catch (error) {
+        next(error);
+    }
+
 });
 
 const User = mongoose.model("User", UserSchema);
