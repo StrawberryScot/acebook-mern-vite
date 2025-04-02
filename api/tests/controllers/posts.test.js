@@ -191,7 +191,7 @@ describe("/posts", () => {
 
   // Tests for updating a post
 
-  describe.only("PUT, when a valid token is present", () => {
+  describe("PUT, when a valid token is present", () => {
     let token;
     let user;
     let post1; // Declare token variable to use in your tests
