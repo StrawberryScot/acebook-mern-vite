@@ -17,10 +17,11 @@ async function createPost(req, res) {
 
 async function updatePost(req, res) {
   const updatedPost = await Post.findByIdAndUpdate(
-    req.params._id,
+    req.params.id,
     {text: req.body.text},
     { new: true }
   );
+
   console.log(`id: ${req.params.id}`);
   console.log(updatedPost);
 

@@ -5,6 +5,7 @@ const app = require("../../app");
 const Post = require("../../models/post");
 const User = require("../../models/user");
 const testUserData = require("../userDataForTest");
+const { default: mongoose } = require("mongoose");
 
 require("../mongodb_helper");
 
@@ -191,25 +192,36 @@ describe("/posts", () => {
   // Tests for updating a post
 
   describe.only("PUT, when a valid token is present", () => {
-    test("responds with a 200", async () => {
+    let token;
+    let user;
+    let post1; // Declare token variable to use in your tests
+
+    beforeAll(async () => {
+      // Create a user and generate a token before the tests run
       testUserData.email = "post-test@test.com";
       testUserData.password = "12345678";
       const user = new User(testUserData);
       await user.save({ timeout: 5000 });
 
-      await request(app);
-
-      const post1 = new Post({
-        postedBy: user._id,
-        text: "I am an original post!",
+      // Generate a token
+      token = JWT.sign({ userId: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "1h",
       });
 
-      await post1.save();
+    post1 = new Post({
+      postedBy: user._id,
+      text: "I am an original post!",
+    });
 
+    // Save the post to the database
+    await post1.save();
+  });
+
+    test("responds with a 200", async () => {
       const response = await request(app)
-        .put(`/posts/${post1._id.toString()}`)
-        .set("Authorization", `Bearer ${token}`)
-        .send({ text: "I am an updated post!" });
+      .put(`/posts/${post1._id.toString()}`)  // Use the actual post's _id
+      .set("Authorization", `Bearer ${token}`)
+      .send({ text: "I am an updated post!" });
 
       expect(response.status).toEqual(200);
     });
@@ -245,7 +257,6 @@ describe("/posts", () => {
       const user = new User(testUserData);
       await user.save({ timeout: 5000 });
 
-      
       const testApp = request(app);
 
       await request(app);
