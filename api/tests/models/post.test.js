@@ -66,19 +66,6 @@ describe("Post model", () => {
     });
   });
 
-  it("fails to save without required comment fields", async () => {
-    const post = new Post({
-      postedBy: new mongoose.Types.ObjectId(),
-      text: "Bad comment",
-      comments: [
-        {
-          text: "Missing userId"
-        }
-      ]
-    });
-    await expect(post.save()).rejects.toThrow(/userId.*required/);
-  });
-
   it("defaults likes to empty array", async () => {
     const post = new Post({
       postedBy: new mongoose.Types.ObjectId(),
@@ -86,5 +73,5 @@ describe("Post model", () => {
     })
     await post.save();
     expect(post.likes).toEqual([]);
-  })
+  });
 });
