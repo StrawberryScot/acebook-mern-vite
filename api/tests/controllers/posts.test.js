@@ -26,8 +26,8 @@ function createToken(userId) {
 let token;
 describe("/posts", () => {
   beforeAll(async () => {
-    testUserData.email = "post-test@test.com",
-    testUserData.password = "12345678";
+    (testUserData.email = "post-test@test.com"),
+      (testUserData.password = "12345678");
     const user = new User(testUserData);
     await user.save({ timeout: 5000 });
     await Post.deleteMany({});
@@ -185,6 +185,88 @@ describe("/posts", () => {
       const response = await request(app).get("/posts");
 
       expect(response.body.token).toEqual(undefined);
+    });
+  });
+
+  // Tests for updating a post
+
+  describe.only("PUT, when a valid token is present", () => {
+    test("responds with a 200", async () => {
+      testUserData.email = "post-test@test.com";
+      testUserData.password = "12345678";
+      const user = new User(testUserData);
+      await user.save({ timeout: 5000 });
+
+      await request(app);
+
+      const post1 = new Post({
+        postedBy: user._id,
+        text: "I am an original post!",
+      });
+
+      await post1.save();
+
+      const response = await request(app)
+        .put(`/posts/${post1._id.toString()}`)
+        .set("Authorization", `Bearer ${token}`)
+        .send({ text: "I am an updated post!" });
+
+      expect(response.status).toEqual(200);
+    });
+
+    test("updates an exisiting post", async () => {
+      testUserData.email = "post-test@test.com";
+      testUserData.password = "12345678";
+      const user = new User(testUserData);
+      await user.save({ timeout: 5000 });
+
+      await request(app);
+      const post1 = new Post({
+        postedBy: user._id,
+        text: "I am an original post!",
+      });
+
+      await post1.save();
+
+      await request(app)
+        .put(`/posts/${post1._id.toString()}`)
+        .set("Authorization", `Bearer ${token}`)
+        .send({ text: "I am an updated post!" });
+
+      const posts = await Post.find();
+
+      expect(posts.length).toEqual(1);
+      expect(posts[0].text).toEqual("I am an updated post!");
+    });
+
+    test("returns a new token", async () => {
+      testUserData.email = "post-test@test.com";
+      testUserData.password = "12345678";
+      const user = new User(testUserData);
+      await user.save({ timeout: 5000 });
+
+      
+      const testApp = request(app);
+
+      await request(app);
+      const post1 = new Post({
+        postedBy: user._id,
+        text: "I am an original post!",
+      });
+
+      await post1.save();
+
+      const response = await testApp
+        .put(`/posts/${post1._id.toString()}`)
+        .set("Authorization", `Bearer ${token}`)
+        .send({ text: "I am an updated post!" });
+
+      const newToken = response.body.token;
+      const newTokenDecoded = JWT.decode(newToken, process.env.JWT_SECRET);
+      const oldTokenDecoded = JWT.decode(token, process.env.JWT_SECRET);
+
+      // iat stands for issued at
+      expect(newTokenDecoded.iat > oldTokenDecoded.iat).toEqual(true);
     });
   });
 });
