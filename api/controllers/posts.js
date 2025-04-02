@@ -1,18 +1,51 @@
 const Post = require("../models/post");
+const User = require("../models/user");
 const { generateToken } = require("../lib/token");
 
 async function getAllPosts(req, res) {
-  const posts = await Post.find();
-  const token = generateToken(req.user_id);
-  res.status(200).json({ posts: posts, token: token });
-}
+  try {
+    const posts = await Post.find();
+    res.json({ posts });
+
+  } catch (error) {
+    console.log("Error in getAllPosts controller", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+;}
 
 async function createPost(req, res) {
-  const post = new Post(req.body);
-  post.save();
+  try {
+    const { postedBy, text } = req.body;
+    let { img } = req.body;
 
-  const newToken = generateToken(req.user_id);
-  res.status(201).json({ message: "Post created", token: newToken });
+    if (!postedBy || !text) {
+      return res.status(400).json({ error: "PostedBy and text are required" });
+    }
+
+    const user = await User.findById(postedBy);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (user._id.toString() !== req.user_id) {
+      return res.status(403).json({ error: "Unauthorized to create post" });
+    }
+
+    const maxLength = 500;
+    if (text.length > maxLength) {
+      return res.status(400).json({ error: `Text must be less than ${maxLength} characters` });
+    }
+
+    // need something for img
+
+    const newPost = new Post({ postedBy, text, img });
+    await newPost.save();
+    res.status(201).json(newPost);
+
+  } catch (error) {
+    console.log("Error in createPost controller", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 }
 
 const PostsController = {
