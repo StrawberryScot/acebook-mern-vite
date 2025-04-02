@@ -6,11 +6,12 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      MONGO_URI: "mongodb://localhost:27017/testdb"
     strategy:
          matrix:
              mongodb-version: ['6.0.21']
     
-
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
