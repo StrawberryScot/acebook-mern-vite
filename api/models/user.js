@@ -2,15 +2,49 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 const UserSchema = new mongoose.Schema({
-    email: { type: String, required: true },
-    password: { type: String, required: true },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    profilePicPath: { type: String, default: "", required: false },
-    friends: { type: [String], default: [], required: false },
-    status: { type: String, default: "Online", required: false },
-    backgroundPicPath: { type: String, default: "", required: false },
-    isOnlyFriends: { type: Boolean, default: false, required: false },
+
+  email: { 
+    type: String, 
+    required: true 
+  },
+  password: { 
+    type: String, 
+    required: true
+  },
+  firstName: { 
+    type: String, 
+    required: true 
+  },
+  lastName: { 
+    type: String, 
+    required: true 
+  },
+  profilePicPath: { 
+    type: String, 
+    default: "", 
+    required: false 
+  },
+  friends: { 
+    type: [String], 
+    default: [], 
+    required: false 
+  },
+  status: { 
+    type: String, 
+    default: "Online", 
+    required: false 
+  },
+  backgroundPicPath: { 
+    type: String, 
+    default: "", 
+    required: false 
+  },
+  isOnlyFriends: { 
+    type: Boolean, 
+    default: false, 
+    required: false 
+  },
+
 });
 
 //hashing password before saving:
@@ -28,6 +62,7 @@ UserSchema.pre("save", async function (next) {
     } catch (error) {
         next(error);
     }
+
 });
 
 const User = mongoose.model("User", UserSchema);

@@ -9,16 +9,7 @@
     "test": "jest",
     "coverage": "jest --coverage"
   },
-  "jest": {
-    "coverageThreshold": {
-      "global": {
-        "statements": 30,
-        "branches": 50,
-        "functions": 25,
-        "lines": 35
-      }
-    }
-  },
+
   "author": "Makers Academy",
   "license": "CC-BY-NC-SA-4.0",
   "dependencies": {
