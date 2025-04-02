@@ -77,8 +77,13 @@ describe("/posts", () => {
       expect(posts.length).toEqual(1);
     });
 
-    test("rejects if postedBy doesn’t match token user", async () => {
-      const otherUser = new User({ email: "other@example.com", password: "pass", firstName: "Other", lastName: "User" });
+    test("rejects if postedBy doesnot match token user", async () => {
+      const otherUser = new User({
+        email: "other@example.com",
+        password: "pass",
+        firstName: "Other",
+        lastName: "User",
+      });
       await otherUser.save();
 
       const response = await request(app)
@@ -98,7 +103,9 @@ describe("/posts", () => {
         .send({ postedBy: user._id.toString(), text: longText });
 
       expect(response.status).toEqual(400);
-      expect(response.body.error).toEqual("Text must be less than 500 characters");
+      expect(response.body.error).toEqual(
+        "Text must be less than 500 characters"
+      );
     });
   });
 
