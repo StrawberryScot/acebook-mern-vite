@@ -7,7 +7,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      MONGO_URI: "mongodb://localhost:27017/testdb"
+      MONGODB_URL: "mongodb://localhost:27017/testdb"
     strategy:
          matrix:
              mongodb-version: ['6.0.21']
