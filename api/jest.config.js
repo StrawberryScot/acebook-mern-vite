@@ -7,10 +7,9 @@ const config = {
   maxWorkers: 1, // Make sure our tests run one after another
 };
 
-module.exports = config;
-
-module.exports = {
-  coverageThreshold: {
+module.exports = { 
+config,
+coverageThreshold: {
       global: {
           lines: 80,
       },
