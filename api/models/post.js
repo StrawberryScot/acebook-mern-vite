@@ -25,9 +25,55 @@ const PostSchema = new mongoose.Schema(
 
     comments: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Comment",
-      }
+        commentedBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+
+        text: {
+          type: String,
+          required: true,
+        },
+
+        likes: {
+          type: [mongoose.Schema.Types.ObjectId],
+          ref: "User",
+          default: [],
+        },
+
+        replies: [
+          {
+            repliedBy: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "User",
+              required: true,
+            },
+
+            text: {
+              type: String,
+              required: true,
+            },
+
+            likes: {
+              type: [mongoose.Schema.Types.ObjectId],
+              ref: "User",
+              default: [],
+            },
+            
+            // blocking nested reply for now
+            // replies: [this],
+          }
+        ],
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+        updatedAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
     ],
   },
   {
