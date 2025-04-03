@@ -27,8 +27,6 @@ describe("/posts", () => {
   let token;
 
   beforeAll(async () => {
-
-
     try {
       console.log("Creating test user with data:", testUserData);
       user = new User(testUserData);
@@ -40,8 +38,11 @@ describe("/posts", () => {
       console.error("Error in beforeAll:", error);
       throw error;
     }
-
   });
+
+  beforeEach(async () => {
+    await Post.deleteMany({});
+  })
 
   afterEach(async () => {
     await Post.deleteMany({});
@@ -49,6 +50,7 @@ describe("/posts", () => {
 
   afterAll(async () => {
     await User.deleteMany({});
+    await mongoose.connection.close();
   });
 
   describe("GET /posts with token", () => {
@@ -139,9 +141,7 @@ describe("/posts", () => {
       await user.save({ timeout: 5000 });
 
       // Generate a token
-      token = JWT.sign({ userId: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "1h",
-      });
+      token = createToken(user._id.toString());
 
     post1 = new Post({
       postedBy: user._id,
