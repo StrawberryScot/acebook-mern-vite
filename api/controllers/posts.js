@@ -48,9 +48,28 @@ async function createPost(req, res) {
   }
 }
 
-const PostsController = {
-  getAllPosts: getAllPosts,
-  createPost: createPost,
-};
+async function updatePost(req, res) {
+  const updatedPost = await Post.findByIdAndUpdate(
+    req.params.id,
+    {text: req.body.text},
+    { new: true }
+  );
+
+  console.log(`id: ${req.params.id}`);
+  console.log(updatedPost);
+
+  const newToken = generateToken(req.user_id);
+  return res.status(200).json({ 
+      message: "Post updated", 
+      posts: updatedPost, 
+      token: newToken 
+    });
+
+}
+  const PostsController = {
+    getAllPosts: getAllPosts,
+    createPost: createPost,
+    updatePost: updatePost,
+  };
 
 module.exports = PostsController;

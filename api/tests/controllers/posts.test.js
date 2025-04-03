@@ -5,6 +5,7 @@ const app = require("../../app");
 const Post = require("../../models/post");
 const User = require("../../models/user");
 const testUserData = require("../userDataForTest");
+const { default: mongoose } = require("mongoose");
 
 require("../mongodb_helper");
 
@@ -26,6 +27,8 @@ describe("/posts", () => {
   let token;
 
   beforeAll(async () => {
+
+
     try {
       console.log("Creating test user with data:", testUserData);
       user = new User(testUserData);
@@ -37,6 +40,7 @@ describe("/posts", () => {
       console.error("Error in beforeAll:", error);
       throw error;
     }
+
   });
 
   afterEach(async () => {
@@ -117,6 +121,98 @@ describe("/posts", () => {
 
       expect(response.status).toEqual(401);
       expect(response.body.message).toEqual("auth error");
+    });
+  });
+
+  // Tests for updating a post
+
+  describe("PUT, when a valid token is present", () => {
+    let token;
+    let user;
+    let post1; // Declare token variable to use in your tests
+
+    beforeAll(async () => {
+      // Create a user and generate a token before the tests run
+      testUserData.email = "post-test@test.com";
+      testUserData.password = "12345678";
+      const user = new User(testUserData);
+      await user.save({ timeout: 5000 });
+
+      // Generate a token
+      token = JWT.sign({ userId: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "1h",
+      });
+
+    post1 = new Post({
+      postedBy: user._id,
+      text: "I am an original post!",
+    });
+
+    // Save the post to the database
+    await post1.save();
+  });
+
+    test("responds with a 200", async () => {
+      const response = await request(app)
+      .put(`/posts/${post1._id.toString()}`)  // Use the actual post's _id
+      .set("Authorization", `Bearer ${token}`)
+      .send({ text: "I am an updated post!" });
+
+      expect(response.status).toEqual(200);
+    });
+
+    test("updates an exisiting post", async () => {
+      testUserData.email = "post-test@test.com";
+      testUserData.password = "12345678";
+      const user = new User(testUserData);
+      await user.save({ timeout: 5000 });
+
+      await request(app);
+      const post1 = new Post({
+        postedBy: user._id,
+        text: "I am an original post!",
+      });
+
+      await post1.save();
+
+      await request(app)
+        .put(`/posts/${post1._id.toString()}`)
+        .set("Authorization", `Bearer ${token}`)
+        .send({ text: "I am an updated post!" });
+
+      const posts = await Post.find();
+
+      expect(posts.length).toEqual(1);
+      expect(posts[0].text).toEqual("I am an updated post!");
+    });
+
+    test("returns a new token", async () => {
+      testUserData.email = "post-test@test.com";
+      testUserData.password = "12345678";
+      const user = new User(testUserData);
+      await user.save({ timeout: 5000 });
+
+      const testApp = request(app);
+
+      await request(app);
+      const post1 = new Post({
+        postedBy: user._id,
+        text: "I am an original post!",
+      });
+
+      await post1.save();
+
+      const response = await testApp
+        .put(`/posts/${post1._id.toString()}`)
+        .set("Authorization", `Bearer ${token}`)
+        .send({ text: "I am an updated post!" });
+
+      const newToken = response.body.token;
+      const newTokenDecoded = JWT.decode(newToken, process.env.JWT_SECRET);
+      const oldTokenDecoded = JWT.decode(token, process.env.JWT_SECRET);
+
+      // iat stands for issued at
+      expect(newTokenDecoded.iat > oldTokenDecoded.iat).toEqual(true);
     });
   });
 });
