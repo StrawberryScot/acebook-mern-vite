@@ -99,11 +99,20 @@ async function likeUnlikePost(req, res) {
   }
 };
 
+//async function replyToPost(req, res) {
+//  try {
+//    
+//  } catch (error) {
+//    
+//  }
+//};
+
   const PostsController = {
     getAllPosts: getAllPosts,
     createPost: createPost,
     updatePost: updatePost,
     likeUnlikePost: likeUnlikePost,
+    // replyToPost: replyToPost,
   };
 
 module.exports = PostsController;
