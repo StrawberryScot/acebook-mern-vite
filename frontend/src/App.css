@@ -1,6 +1,7 @@
 #root {
     margin: 0 auto;
     text-align: center;
+    width: 650px;
 }
 
 .round-edge {
@@ -55,4 +56,16 @@
         width: 300px;
         margin: 0px auto;
     }
+}
+
+/* Containers styles */
+.content-container {
+    background-color: #ededed;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: #575c0f;
+    overflow: hidden;
 }

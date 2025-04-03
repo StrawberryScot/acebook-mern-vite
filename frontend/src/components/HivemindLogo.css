@@ -1,0 +1,12 @@
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    filter: drop-shadow(0 0 0.2rem #d69723);
+}
+
+.logo img {
+    height: 50px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}

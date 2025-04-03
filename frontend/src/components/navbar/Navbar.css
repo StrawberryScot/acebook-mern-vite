@@ -7,6 +7,14 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     position: relative;
     z-index: 10;
+    height: auto;
+    width: auto;
+}
+
+.auth-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 @media (max-width: 768px) {
@@ -18,4 +26,37 @@
     .auth-links {
         width: 100%;
     }
+}
+
+.profile-pic-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #f0f0f0;
+    border: 2px solid #d69723;
+    filter: drop-shadow(0 0 0.2rem #d69723);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.profile-pic-container a {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-pic {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-pic-container:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+    cursor: pointer;
 }
