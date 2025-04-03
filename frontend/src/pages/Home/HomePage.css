@@ -1,5 +1,5 @@
 .home-container {
-    background-color: #ededed;
+    background-color: transparent;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -9,10 +9,28 @@
     overflow: hidden;
 }
 
-body {
-    background-image: radial-gradient(#575c0f41 1px, #ededed 0.5px);
+.background-pattern {
+    height: 100vh;
+    width: 100vw;
+    left: 0;
+    position: fixed;
+    background-image: radial-gradient(#67676741 1px, #392625 0.5px);
     background-size: 10px 10px;
-    background-attachment: scroll, #b7b7b7;
+    background-attachment: fixed, #b7b7b7;
+}
+
+.filler {
+    height: 300vh;
+}
+
+.home-container * {
+    /* Pause the animation */
+    animation-play-state: paused;
+    /* Bind the animation to scroll */
+    animation-delay: calc(var(--scroll) * -1s);
+    /* These last 2 properites clean up overshoot weirdness */
+    animation-iteration-count: 1;
+    animation-fill-mode: both;
 }
 
 .navbar {
@@ -20,10 +38,10 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
-    background-color: #ededed;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: transparent;
     position: relative;
     z-index: 10;
+    pointer-events: none;
 }
 
 .logo {
@@ -34,7 +52,7 @@ body {
 }
 
 .logo img {
-    height: 50px;
+    height: 5rem;
     margin-bottom: 20px;
     margin-top: 20px;
 }
@@ -53,6 +71,9 @@ body {
 .login-btn {
     background-color: #d69723;
     color: white;
+    pointer-events: all;
+    left: -50%;
+    top: -50%;
 }
 
 .signup-btn:hover,
@@ -63,14 +84,18 @@ body {
 
 .main-section {
     display: flex;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 6rem 2rem;
     flex: 1;
-    position: relative;
+    position: fixed;
     z-index: 5;
+    pointer-events: none;
 }
 
 .main-section h1 {
@@ -123,3 +148,48 @@ body {
         margin: 0px auto;
     }
 }
+
+.cube-wrap {
+    --size: 10vmin;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    perspective: 100vmin;
+  }
+  .cube {
+    transform-style: preserve-3d;
+    animation: cube 2s linear;
+  }
+  @keyframes cube {
+    to {
+      transform: rotateX(180deg);
+    }
+  }
+  .side {
+    position: absolute;
+    width: var(--size);
+    height: var(--size);
+    backface-visibility: hidden;
+    top: calc(var(--size) * -.5);
+    left: calc(var(--size) * -.5);
+  }
+  .front {
+    transform: translateZ(calc(var(--size) * .5));
+    align-items: center;
+  }
+  .bottom {
+    transform: rotateX(270deg) translateZ(calc(var(--size) * 0.5));
+    align-items: center;
+  }
+
+.home-container * {
+    /* Pause the animation */
+    animation-play-state: paused;
+    /* Bind the animation to scroll */
+    animation-delay: calc(var(--scroll) * -1s);
+    /* These last 2 properites clean up overshoot weirdness */
+    animation-iteration-count: 1;
+    animation-fill-mode: both;
+  }

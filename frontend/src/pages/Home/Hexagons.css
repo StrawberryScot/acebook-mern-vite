@@ -1,0 +1,50 @@
+.hexagon {
+    --b: 10px; /* adjust to control the border  */
+    height: 200px; /* adjust to control the size  */
+    aspect-ratio: 1/cos(30deg);
+    clip-path: 
+      polygon(0 50%,50% -50%,100% 50%,50% 150%,0 50%,
+      var(--b) 50%,
+      calc(25% + var(--b)*cos(60deg)) calc(100% - var(--b)*sin(60deg)),
+      calc(75% - var(--b)*cos(60deg)) calc(100% - var(--b)*sin(60deg)),
+      calc(100% - var(--b)) 50%,
+      calc(75% - var(--b)*cos(60deg)) calc(var(--b)*sin(60deg)),
+      calc(25% + var(--b)*cos(60deg)) calc(var(--b)*sin(60deg)),
+      var(--b) 50%);
+    background: #443836;
+    left: 10vw;
+    top: 10vh;
+    position: fixed;
+  }
+
+  .hexagon-vert {
+    --b: 10px; /* adjust to control the border  */
+    height: 200px; /* adjust to control the size  */
+    aspect-ratio: cos(30deg);
+    clip-path: 
+      polygon(50% 0,-50% 50%,50% 100%,150% 50%,50% 0,
+      50% var(--b),
+      calc(100% - var(--b)*sin(60deg)) calc(25% + var(--b)*cos(60deg)),
+      calc(100% - var(--b)*sin(60deg)) calc(75% - var(--b)*cos(60deg)),
+      50% calc(100% - var(--b)),
+      calc(var(--b)*sin(60deg)) calc(75% - var(--b)*cos(60deg)),
+      calc(var(--b)*sin(60deg)) calc(25% + var(--b)*cos(60deg)),
+      50% var(--b));
+    background: #3B8686;
+  }
+  
+  .hexagon-filled {
+    height: 5rem; /* adjust to control the size  */
+    aspect-ratio: 1/cos(30deg);
+    clip-path: polygon(50% -50%,100% 50%,50% 150%,0 50%);
+    background: #3e3e3e;
+    opacity: 0.2;
+    position: fixed;
+    transition-duration: 1s;
+  }
+
+.hexagon-filled:hover {
+    background-color: #616161;
+    opacity: 0.4;
+    transition-duration: 0s;
+}
