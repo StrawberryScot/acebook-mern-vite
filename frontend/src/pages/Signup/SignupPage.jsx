@@ -1,4 +1,4 @@
-import { SignupForm } from "../../components/SignUpForm";
+import { SignupForm } from "../../components/SignupForm";
 import { HivemindLogo } from "../../components/HivemindLogo";
 
 export function SignupPage() {
