@@ -58,6 +58,8 @@ async function updatePost(req, res) {
   console.log(`id: ${req.params.id}`);
   console.log(updatedPost);
 
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
   const newToken = generateToken(req.user_id);
   return res.status(200).json({ 
       message: "Post updated", 

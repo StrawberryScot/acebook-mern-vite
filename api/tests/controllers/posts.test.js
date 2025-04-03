@@ -26,6 +26,10 @@ describe("/posts", () => {
   let user;
   let token;
 
+  beforeEach(async () => {
+    await Post.deleteMany({});
+  });
+
   beforeAll(async () => {
 
 
@@ -131,17 +135,22 @@ describe("/posts", () => {
     let user;
     let post1; // Declare token variable to use in your tests
 
-    beforeAll(async () => {
-      // Create a user and generate a token before the tests run
+    beforeEach(async () => {
+      // Clear posts before each test
+      await Post.deleteMany({});
+
+    // beforeAll(async () => {
+    //   // Create a user and generate a token before the tests run
       testUserData.email = "post-test@test.com";
       testUserData.password = "12345678";
-      const user = new User(testUserData);
+      user = new User(testUserData);
       await user.save({ timeout: 5000 });
 
       // Generate a token
       token = JWT.sign({ userId: user._id }, process.env.JWT_SECRET, {
         expiresIn: "1h",
       });
+
 
     post1 = new Post({
       postedBy: user._id,
@@ -150,6 +159,11 @@ describe("/posts", () => {
 
     // Save the post to the database
     await post1.save();
+  });
+
+  afterEach(async () => {
+    // Clean up after each test
+    await Post.deleteMany({});
   });
 
     test("responds with a 200", async () => {
@@ -162,18 +176,18 @@ describe("/posts", () => {
     });
 
     test("updates an exisiting post", async () => {
-      testUserData.email = "post-test@test.com";
-      testUserData.password = "12345678";
-      const user = new User(testUserData);
-      await user.save({ timeout: 5000 });
+      // testUserData.email = "post-test@test.com";
+      // testUserData.password = "12345678";
+      // const user = new User(testUserData);
+      // await user.save({ timeout: 5000 });
 
-      await request(app);
-      const post1 = new Post({
-        postedBy: user._id,
-        text: "I am an original post!",
-      });
+      // await request(app);
+      // const post1 = new Post({
+      //   postedBy: user._id,
+      //   text: "I am an original post!",
+      // });
 
-      await post1.save();
+      // await post1.save();
 
       await request(app)
         .put(`/posts/${post1._id.toString()}`)
@@ -187,22 +201,22 @@ describe("/posts", () => {
     });
 
     test("returns a new token", async () => {
-      testUserData.email = "post-test@test.com";
-      testUserData.password = "12345678";
-      const user = new User(testUserData);
-      await user.save({ timeout: 5000 });
+      // testUserData.email = "post-test@test.com";
+      // testUserData.password = "12345678";
+      // const user = new User(testUserData);
+      // await user.save({ timeout: 5000 });
 
-      const testApp = request(app);
+      // const testApp = request(app);
 
-      await request(app);
-      const post1 = new Post({
-        postedBy: user._id,
-        text: "I am an original post!",
-      });
+      // await request(app);
+      // const post1 = new Post({
+      //   postedBy: user._id,
+      //   text: "I am an original post!",
+      // });
 
-      await post1.save();
+      // await post1.save();
 
-      const response = await testApp
+      const response = await request(app)
         .put(`/posts/${post1._id.toString()}`)
         .set("Authorization", `Bearer ${token}`)
         .send({ text: "I am an updated post!" });
