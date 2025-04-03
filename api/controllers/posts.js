@@ -86,7 +86,6 @@ async function deletePost(req, res) {
   await new Promise(resolve => setTimeout(resolve, 1000));
   const newToken = generateToken(req.user_id);
   return res.status(200).json({message:"Post deleted successfully", token:newToken})
-  }
 };
 
 async function likeUnlikePost(req, res) {
