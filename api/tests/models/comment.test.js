@@ -5,6 +5,7 @@ const Post = require("../../models/post");
 
 describe("Comment model", () => {
   beforeEach(async () => {
+    await Comment.deleteMany({});
     await Post.deleteMany({});
   });
 
