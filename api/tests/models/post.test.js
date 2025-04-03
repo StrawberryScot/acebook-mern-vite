@@ -58,12 +58,26 @@ describe("Post model", () => {
       img: "http://example.com/image.jpg",
       comments: [
         {
-          userId: new mongoose.Types.ObjectId(),
-          text: "Nice post!",
-          username: "user123"
-        }
-      ]
+          commentedBy: new mongoose.Types.ObjectId(),
+          text: "Comment on Post!",
+          likes: [new mongoose.Types.ObjectId()],
+          replies: [
+            {
+              repliedBy: new mongoose.Types.ObjectId(),
+              text: "Reply to Comment",
+              likes: [new mongoose.Types.ObjectId()],
+            },
+          ],
+        },
+      ],
     });
+    await post.save();
+    const savedPost = await Post.findById(post._id);
+    expect(savedPost.img).toEqual("http://example.com/image.jpg");
+    expect(savedPost.comments.length).toBe(1);
+    expect(savedPost.comments[0].text).toEqual("Comment on Post!");
+    expect(savedPost.comments[0].replies.length).toBe(1);
+    expect(savedPost.comments[0].replies[0].text).toEqual("Reply to Comment");
   });
 
   it("defaults likes to empty array", async () => {
@@ -73,5 +87,32 @@ describe("Post model", () => {
     })
     await post.save();
     expect(post.likes).toEqual([]);
+  });
+
+  it("validates comment structure", async () => {
+    const post = new Post({
+      postedBy: new mongoose.Types.ObjectId(),
+      text: "Test post",
+      comments: [
+        {
+          commentedBy: new mongoose.Types.ObjectId(),
+          replies: [
+            {
+              repliedBy: new mongoose.Types.ObjectId(),
+              text: "Test reply",
+              replies: [
+                {
+                  repliedBy: new mongoose.Types.ObjectId(),
+                  text: "Invalid nested reply",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    const error = post.validateSync();
+    expect(error).toBeDefined();
+    expect(error.message).toMatch(/validation failed/);
   });
 });
