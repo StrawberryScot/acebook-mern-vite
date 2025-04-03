@@ -61,7 +61,7 @@
 .signup-btn {
     text-decoration: none;
     padding: 0.5rem 1.2rem;
-    border-radius: 10px;
+    border-radius: 1rem;
     font-weight: 600;
     transition: all 0.2s ease;
     filter: drop-shadow(0 0 0.2rem #d69723);
@@ -187,7 +187,7 @@
 
 .hive-icon {
     position: fixed;
-    top: 35vh;
+    top: 36vh;
     left: 14vw;
     display: flex;
     flex-direction: column;
