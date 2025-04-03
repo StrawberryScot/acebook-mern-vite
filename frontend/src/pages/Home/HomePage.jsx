@@ -28,6 +28,12 @@ export function HomePage() {
     <div className="home-container" id="home-container">
       <div className="background-pattern"></div>
       <div>{hexagons}</div>
+      <div className="hive-icon">
+        <div className="hive-bar-small brown"></div>
+        <div className="hive-bar-large yellow"></div>
+        <div className="hive-bar-large brown"></div>
+        <div className="hive-bar-small yellow"></div>
+      </div>
       <div className="main-section">
         <div class="cube-wrap">
           <div class="cube">

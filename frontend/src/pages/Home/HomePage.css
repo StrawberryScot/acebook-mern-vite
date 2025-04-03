@@ -187,6 +187,42 @@
     align-items: center;
   }
 
+.hive-icon {
+    position: fixed;
+    top: 35vh;
+    left: 14vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hive-bar-large {
+    width: 20rem;
+    height: 2rem;
+    margin: 1rem;
+    opacity: 0.9;
+    z-index: 3000;
+    outline: solid 0.5rem white;
+    border-radius: 2rem;
+}
+.hive-bar-small {
+    width: 16rem;
+    height: 2rem;
+    margin: 1rem;
+    opacity: 0.9;
+    z-index: 3000;
+    outline: solid 0.5rem white;
+    border-radius: 2rem;
+}
+
+.yellow {
+    background-color: #d69723;
+}
+.brown {
+    background-color: #392625;
+}
+
+
 .home-container * {
     /* Pause the animation */
     animation-play-state: paused;
