@@ -332,4 +332,132 @@ describe("/posts", () => {
       }, 10000); // give the connection to Atlas MongoDB more time to operate
     });
   });
-});
+
+  describe("POST /:id/comment", () => {
+    let user;
+    let token;
+    let post;
+
+    beforeEach(async () => {
+      user = new User(testUserData);
+      await user.save();
+      token = createToken(user._id.toString());
+      post = new Post({ postedBy: user._id, text: "Test post" });
+      await post.save();
+    });
+
+    test("adds a comment to a post", async () => {
+      const response = await request(app)
+        .post(`/posts/${post._id}/comment`)
+        .set("Authorization", `Bearer ${token}`)
+        .send({ text: "Test comment" });
+
+      expect(response.status).toEqual(200);
+      expect(response.body.text).toEqual("Test comment");
+
+      const updatedPost = await Post.findById(post._id);
+      expect(updatedPost.comments.length).toEqual(1);
+      expect(updatedPost.comments[0].text).toEqual("Test comment");
+    });
+
+    test("returns 404 for non-existent post", async () => {
+      const invalidPostId = new mongoose.Types.ObjectId();
+      const response = await request(app)
+        .post(`/posts/${invalidPostId}/comment`)
+        .set("Authorization", `Bearer ${token}`)
+        .send({ text: "Test comment" });
+
+      expect(response.status).toEqual(404);
+      expect(response.body.message).toEqual("Post not found");
+    });
+
+    test("returns 400 for empty comment text", async () => {
+      const response = await request(app)
+        .post(`/posts/${post._id}/comment`)
+        .set("Authorization", `Bearer ${token}`)
+        .send({ text: "" });
+
+      expect(response.status).toEqual(400);
+      expect(response.body.message).toEqual("Comment text is required");
+    });
+
+    test("returns 401 without token", async () => {
+      const response = await request(app)
+        .post(`/posts/${post._id}/comment`)
+        .send({ text: "Test comment" });
+
+      expect(response.status).toEqual(401);
+    });
+  });
+
+  describe("POST /:postId/comments/:commentId/replies", () => {
+    let user;
+    let token;
+    let post;
+    let comment;
+
+    beforeEach(async () => {
+      user = new User(testUserData);
+      await user.save();
+      token = createToken(user._id.toString());
+      post = new Post({ postedBy: user._id, text: "Test post" });
+      comment = { commentedBy: user._id, text: "Test comment" };
+      post.comments.push(comment);
+      await post.save();
+    });
+
+    test("adds a reply to a comment", async () => {
+      const response = await request(app)
+        .post(`/posts/${post._id}/comments/${post.comments[0]._id}/replies`)
+        .set("Authorization", `Bearer ${token}`)
+        .send({ text: "Test reply" });
+
+      expect(response.status).toEqual(200);
+      expect(response.body.text).toEqual("Test reply");
+
+      const updatedPost = await Post.findById(post._id);
+      expect(updatedPost.comments[0].replies.length).toEqual(1);
+      expect(updatedPost.comments[0].replies[0].text).toEqual("Test reply");
+    });
+
+    test("returns 404 for non-existent post", async () => {
+      const invalidPostId = new mongoose.Types.ObjectId();
+      const response = await request(app)
+        .post(`/posts/${invalidPostId}/comments/${post.comments[0]._id}/replies`)
+        .set("Authorization", `Bearer ${token}`)
+        .send({ text: "Test reply" });
+
+      expect(response.status).toEqual(404);
+      expect(response.body.message).toEqual("Post not found");
+    });
+
+    test("returns 404 for non-existent comment", async () => {
+      const invalidCommentId = new mongoose.Types.ObjectId();
+      const response = await request(app)
+        .post(`/posts/${post._id}/comments/${invalidCommentId}/replies`)
+        .set("Authorization", `Bearer ${token}`)
+        .send({ text: "Test reply" });
+
+      expect(response.status).toEqual(404);
+      expect(response.body.message).toEqual("Comment not found");
+    });
+
+    test("returns 400 for empty reply text", async () => {
+      const response = await request(app)
+        .post(`/posts/${post._id}/comments/${post.comments[0]._id}/replies`)
+        .set("Authorization", `Bearer ${token}`)
+        .send({ text: "" });
+
+      expect(response.status).toEqual(400);
+      expect(response.body.message).toEqual("Reply text is required");
+    });
+
+    test("returns 401 without token", async () => {
+      const response = await request(app)
+        .post(`/posts/${post._id}/comments/${post.comments[0]._id}/replies`)
+        .send({ text: "Test reply" });
+
+      expect(response.status).toEqual(401);
+    });
+  });
+})
