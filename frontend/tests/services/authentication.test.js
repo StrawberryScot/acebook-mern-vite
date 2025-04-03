@@ -56,9 +56,7 @@ describe("authentication service", () => {
       try {
         await login(testEmail, testPassword);
       } catch (err) {
-        expect(err.message).toEqual(
-          "Received status 403 when logging in. Expected 201"
-        );
+        expect(err.message).toEqual("Wrong Password");
       }
     });
   });
