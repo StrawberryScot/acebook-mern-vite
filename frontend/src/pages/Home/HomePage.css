@@ -72,8 +72,6 @@
     background-color: #d69723;
     color: white;
     pointer-events: all;
-    left: -50%;
-    top: -50%;
 }
 
 .signup-btn:hover,
@@ -150,7 +148,7 @@
 }
 
 .cube-wrap {
-    --size: 10vmin;
+    --size: 20vmin;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -164,7 +162,7 @@
   }
   @keyframes cube {
     to {
-      transform: rotateX(180deg);
+      transform: rotateX(360deg);
     }
   }
   .side {
@@ -174,13 +172,18 @@
     backface-visibility: hidden;
     top: calc(var(--size) * -.5);
     left: calc(var(--size) * -.5);
+    display: flex;
   }
   .front {
-    transform: translateZ(calc(var(--size) * .5));
+    transform: translateZ(calc(var(--size) * 0.5));
     align-items: center;
   }
   .bottom {
     transform: rotateX(270deg) translateZ(calc(var(--size) * 0.5));
+    align-items: center;
+  }
+.back {
+    transform: rotateX(180deg) translateZ(calc(var(--size) * 0.5));
     align-items: center;
   }
 

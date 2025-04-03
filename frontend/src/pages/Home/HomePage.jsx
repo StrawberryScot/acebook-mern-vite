@@ -31,17 +31,15 @@ export function HomePage() {
       <div className="main-section">
         <div class="cube-wrap">
           <div class="cube">
-            <div class="side bottom">
-              <div className="auth-links">
-                <Link to="/login" className="login-btn">
-                  Log In
-                </Link>
-              </div>
-              <div className="cta-buttons">
+            <div class="side back">
                 <Link to="/signup" className="signup-btn">
                   Sign Up
                 </Link>
-              </div>
+            </div>
+            <div class="side bottom">
+                <Link to="/login" className="login-btn">
+                  Log In
+                </Link>
             </div>
             <div class="side front"><HivemindLogo /></div>
           </div>
