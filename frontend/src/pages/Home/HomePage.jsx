@@ -34,6 +34,9 @@ export function HomePage() {
         <div className="hive-bar-large brown"></div>
         <div className="hive-bar-small yellow"></div>
       </div>
+      <div className="scroll-indicator">
+        <p>SCROLL &#8595;</p>
+      </div>
       <div className="main-section">
         <div class="cube-wrap">
           <div class="cube">
