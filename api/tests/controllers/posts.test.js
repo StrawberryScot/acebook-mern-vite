@@ -6,6 +6,7 @@ const Post = require("../../models/post");
 const User = require("../../models/user");
 const testUserData = require("../userDataForTest");
 const { default: mongoose } = require("mongoose");
+const { likeUnlikePost } = require("../../controllers/posts");
 
 require("../mongodb_helper");
 
@@ -32,12 +33,9 @@ describe("/posts", () => {
 
   beforeAll(async () => {
     try {
-      console.log("Creating test user with data:", testUserData);
       user = new User(testUserData);
       await user.save({ timeout: 5000 });
-      console.log("User saved with ID:", user._id);
       token = createToken(user._id.toString());
-      console.log("Token generated:", token);
     } catch (error) {
       console.error("Error in beforeAll:", error);
       throw error;
@@ -227,6 +225,99 @@ describe("/posts", () => {
 
       // iat stands for issued at
       expect(newTokenDecoded.iat > oldTokenDecoded.iat).toEqual(true);
+    });
+  });
+
+  // Test like and unlike
+  describe("PUT /like/:id", () => {
+    let likeUser;
+    let likeToken;
+    let likePost;
+
+    beforeAll(async () => {
+     likeUser = new User(testUserData);
+     await likeUser.save();
+     
+     likeToken = createToken(likeUser._id.toString());
+    });
+
+    beforeEach(async () => {
+      await Post.deleteMany({});
+      likePost = new Post({
+        postedBy: likeUser._id,
+        text: "Test post for liking",
+        likes: [],
+      });
+      await likePost.save();
+    });
+
+    afterAll(async () => {
+      await User.deleteMany({});
+      await Post.deleteMany({});
+    });
+
+    describe("PUT /like/:id with valid token", () => {
+      test("likes a post when not previously liked", async () => {
+        const response = await request(app)
+          .put(`/posts/like/${likePost._id}`)
+          .set("Authorization", `Bearer ${likeToken}`);
+
+          expect(response.status).toEqual(200);
+          expect(response.body.message).toEqual("Post liked");
+
+          const updatedPost = await Post.findById(likePost._id);
+          expect(updatedPost.likes).toContainEqual(likeUser._id);
+          expect(updatedPost.likes.length).toEqual(1);
+      });
+
+      test("unlikes a post when previously liked", async () => {
+        await Post.updateOne(
+          { _id: likePost._id }, 
+          { $push: { likes: likeUser._id } }
+        );
+
+        const response = await request(app)
+        .put(`/posts/like/${likePost._id}`)
+        .set("Authorization", `Bearer ${likeToken}`);
+
+        expect(response.status).toEqual(200);
+        expect(response.body.message).toEqual("Post unliked");
+
+        const updatedPost = await Post.findById(likePost._id);
+        expect(updatedPost.likes).not.toContainEqual(likeUser._id);
+        expect(updatedPost.likes.length).toEqual(0);
+      });
+
+      test("returns 404 for non-existent post", async () => {
+        const invalidPostId = new mongoose.Types.ObjectId(); // Create a random valid looking id, that doesn't exist.
+        const response = await request(app)
+          .put(`/posts/like/${invalidPostId}`)
+          .set("Authorization", `Bearer ${likeToken}`);
+  
+        expect(response.status).toEqual(404);
+        expect(response.body.error).toEqual("Post not found");
+      });
+  
+      test("returns 401 without token", async () => {
+          const response = await request(app)
+            .put(`/posts/like/${likePost._id}`);
+  
+          expect(response.status).toEqual(401);
+      });
+  
+      test("returns 500 on database error", async () => {
+          // Mock Post.findById to throw an error
+          const findByIdMock = jest.spyOn(Post, 'findById').mockRejectedValue(new Error('Database error'));
+  
+          const response = await request(app)
+            .put(`/posts/like/${likePost._id}`)
+            .set("Authorization", `Bearer ${likeToken}`);
+  
+          expect(response.status).toEqual(500);
+          expect(response.body.error).toEqual('Database error');
+  
+          findByIdMock.mockRestore(); // Restore the original function
+      }, 10000); // give the connection to Atlas MongoDB more time to operate
     });
   });
 });

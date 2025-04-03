@@ -10,7 +10,8 @@ async function getAllPosts(req, res) {
     console.log("Error in getAllPosts controller", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
-}
+};
+
 
 async function createPost(req, res) {
   try {
@@ -53,7 +54,7 @@ async function createPost(req, res) {
     console.log("Error in createPost controller", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
-}
+};
 
 async function updatePost(req, res) {
   const updatedPost = await Post.findByIdAndUpdate(
@@ -68,16 +69,50 @@ async function updatePost(req, res) {
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
   const newToken = generateToken(req.user_id);
-  return res.status(200).json({
-    message: "Post updated",
-    posts: updatedPost,
-    token: newToken,
-  });
-}
-const PostsController = {
-  getAllPosts: getAllPosts,
-  createPost: createPost,
-  updatePost: updatePost,
+  
+  return res.status(200).json({ 
+      message: "Post updated", 
+      posts: updatedPost, 
+      token: newToken 
+    });
 };
+
+async function likeUnlikePost(req, res) {
+  try {   
+    console.log("likeUnlikePost controller reached");
+    console.log("Post ID:", req.params.id);
+    console.log("User Id:", req.user_id);
+    
+    const { id: postId } = req.params;
+    const userId = req.user_id;
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    const userLikedPost = post.likes.includes(userId);
+
+    if (userLikedPost) {
+      // Unlike the post
+      await Post.updateOne({ _id: postId }, { $pull: {likes: userId}});
+      res.status(200).json({ message: "Post unliked" });
+    } else {
+      post.likes.push(userId);
+      await post.save();
+      res.status(200).json({ message: "Post liked" });
+    }
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+  const PostsController = {
+    getAllPosts: getAllPosts,
+    createPost: createPost,
+    updatePost: updatePost,
+    likeUnlikePost: likeUnlikePost,
+  };
 
 module.exports = PostsController;
