@@ -15,17 +15,6 @@ body {
     background-attachment: scroll, #b7b7b7;
 }
 
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: #ededed;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    position: relative;
-    z-index: 10;
-}
-
 .logo {
     display: flex;
     align-items: center;
@@ -39,26 +28,10 @@ body {
     margin-top: 20px;
 }
 
-.login-btn,
-.signup-btn {
-    text-decoration: none;
-    padding: 0.5rem 1.2rem;
-    border-radius: 10px;
-    font-weight: 600;
-    transition: all 0.2s ease;
-    filter: drop-shadow(0 0 0.2rem #d69723);
-}
-
-.signup-btn,
-.login-btn {
-    background-color: #d69723;
-    color: white;
-}
-
-.signup-btn:hover,
-.login-btn:hover {
-    background-color: #c1881e;
-    color: white;
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
 }
 
 .main-section {
@@ -86,19 +59,8 @@ body {
     filter: drop-shadow(0 0 0.2rem #575c0f55);
 }
 
-.cta-buttons {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
-}
-
 /* Media queries for responsiveness */
 @media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        padding: 1rem;
-    }
-
     .main-section h1 {
         font-size: 2.5rem;
     }
@@ -110,16 +72,5 @@ body {
     .cta-buttons {
         flex-direction: column;
         width: 100%;
-        max-width: 300px;
-    }
-
-    .auth-links {
-        width: 100%;
-    }
-
-    .login-btn {
-        display: block;
-        max-width: 300px;
-        margin: 0px auto;
     }
 }
