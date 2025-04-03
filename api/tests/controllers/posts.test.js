@@ -226,6 +226,18 @@ describe("/posts", () => {
       // iat stands for issued at
       expect(newTokenDecoded.iat > oldTokenDecoded.iat).toEqual(true);
     });
+
+    test("delete a single post", async () => {
+      const response = await request(app)
+      .delete(`/posts/${post1._id.toString()}`)
+      .set("Authorization", `Bearer ${token}`)
+
+      expect(response.status).toBe(200);
+      expect(response.body.message).toBe('Post deleted successfully');
+
+      const deletedPost = await Post.findById(`${post1._id.toString()}`);
+      expect(deletedPost).toBeNull();
+    })
   });
 
   // Test like and unlike
