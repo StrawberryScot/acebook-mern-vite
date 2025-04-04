@@ -12,7 +12,6 @@ async function getAllPosts(req, res) {
   }
 };
 
-
 async function createPost(req, res) {
   try {
     const { postedBy, text } = req.body;
@@ -27,14 +26,7 @@ async function createPost(req, res) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    console.log({
-      userIdFromDB: user._id.toString(),
-      userIdTypeFromDB: typeof user._id.toString(),
-      userIdFromToken: req.body.postedBy,
-      userIdTypeFromToken: typeof req.body.postedBy,
-    });
-
-    if (user._id.toString() !== req.body.postedBy) {
+    if (user._id.toString() !== req.user_id) {
       return res.status(403).json({ error: "Unauthorized to create post" });
     }
 
@@ -94,7 +86,6 @@ async function deletePost(req, res) {
   await new Promise(resolve => setTimeout(resolve, 1000));
   const newToken = generateToken(req.user_id);
   return res.status(200).json({message:"Post deleted successfully", token:newToken})
-  }
 };
 
 async function likeUnlikePost(req, res) {
@@ -128,13 +119,74 @@ async function likeUnlikePost(req, res) {
   }
 };
 
-//async function replyToPost(req, res) {
-//  try {
-//    
-//  } catch (error) {
-//    
-//  }
-//};
+async function commentToPost(req, res) {
+  try {
+    const postId = req.params.id;
+    const { text } = req.body;
+
+    if (!text || text.trim() === "") {
+      return res.status(400).json({ message: "Comment text is required" });
+    }
+
+    const post = await Post.findById(postId); // ensure post exists
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const newComment = {
+      commentedBy: req.user_id,
+      text,
+    };
+
+    post.comments.push(newComment);
+    await post.save();
+
+    res.status(200).json(newComment);
+
+  } catch (error) {
+    console.error("Error in commentToPost controller", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+async function replyToComment(req, res) {
+  try {
+    const postId = req.params.postId;
+    const commentId = req.params.commentId;
+    const { text } = req.body;
+
+    if (!text || text.trim() === "") {
+      return res.status(400).json({ message: "Reply text is required" });
+    }
+
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const comment = post.comments.id(commentId);
+
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    const newReply = {
+      repliedBy: req.user_id,
+      text,
+    };
+
+    comment.replies.push(newReply);
+    await post.save();
+
+    res.status(200).json(newReply);
+
+  } catch (error) {
+    console.error("Error in replyToComment controller", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 
   const PostsController = {
     getAllPosts: getAllPosts,
@@ -142,7 +194,8 @@ async function likeUnlikePost(req, res) {
     updatePost: updatePost,
     deletePost: deletePost,
     likeUnlikePost: likeUnlikePost,
-    // replyToPost: replyToPost,
+    commentToPost: commentToPost,
+    replyToComment: replyToComment,
   };
 
 module.exports = PostsController;
