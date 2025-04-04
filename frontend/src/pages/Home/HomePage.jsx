@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import "./HomePage.css";
 import images from "../../images";
 import HexagonBackground from "../../components/HexagonBackground";
+import HiveIcon from "../../components/HiveIcon"
 
 export function HomePage() {
 
@@ -16,12 +17,7 @@ export function HomePage() {
     <div className="home-container" id="home-container">
       <div className="background-pattern"></div>
       <HexagonBackground />
-      <div className="hive-icon">
-        <div className="hive-bar-small brown"></div>
-        <div className="hive-bar-large yellow"></div>
-        <div className="hive-bar-large brown"></div>
-        <div className="hive-bar-small yellow"></div>
-      </div>
+      <HiveIcon />
       <div className="scroll-indicator">
         <p>SCROLL &#8595;</p>
       </div>
