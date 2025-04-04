@@ -2,61 +2,83 @@
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export async function login(email, password) {
-  const payload = {
-    email: email,
-    password: password,
-  };
+    const payload = {
+        email: email,
+        password: password,
+    };
 
-  const requestOptions = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  };
+    const requestOptions = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+    };
 
-  const response = await fetch(`${BACKEND_URL}/tokens`, requestOptions);
+    const response = await fetch(`${BACKEND_URL}/tokens`, requestOptions);
 
-  // docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/201
-  if (response.status === 201) {
-    let data = await response.json();
-    return data.token;
-  } else {
-    //converting error received from authentication.js file in the backend to json to use it later on LoginPage.jsx:
-    const errorData = await response.json();
-    throw new Error(
-      errorData.message ||
-        `Received status ${response.status} when logging in. Expected 201`
-    );
-  }
+    // docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/201
+    if (response.status === 201) {
+        let data = await response.json();
+        return data.token;
+    } else {
+        //converting error received from authentication.js file in the backend to json to use it later on LoginPage.jsx:
+        const errorData = await response.json();
+        throw new Error(
+            errorData.message ||
+                `Received status ${response.status} when logging in. Expected 201`
+        );
+    }
 }
 
 export async function signup(email, password, firstName, lastName) {
-  const payload = {
-    email: email,
-    password: password,
-    firstName: firstName,
-    lastName: lastName,
-  };
+    const payload = {
+        email: email,
+        password: password,
+        firstName: firstName,
+        lastName: lastName,
+    };
 
-  const requestOptions = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  };
+    const requestOptions = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+    };
 
-  let response = await fetch(`${BACKEND_URL}/users`, requestOptions);
+    let response = await fetch(`${BACKEND_URL}/users`, requestOptions);
 
-  // docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/201
-  if (response.status === 201) {
-    return;
-  } else {
-    const errorData = await response.json();
-    throw new Error(
-      errorData.message ||
-        `Received status ${response.status} when signing up. Expected 201`
-    );
-  }
+    // docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/201
+    if (response.status === 201) {
+        return;
+    } else {
+        const errorData = await response.json();
+        throw new Error(
+            errorData.message ||
+                `Received status ${response.status} when signing up. Expected 201`
+        );
+    }
+}
+
+export async function getUserByToken(token) {
+    const requestOptions = {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    };
+    let response = await fetch(`${BACKEND_URL}/users/${token}`, requestOptions);
+
+    // docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/201
+    if (response.status === 200) {
+        const data = await response.json();
+        return data;
+    } else {
+        const errorData = await response.json();
+        throw new Error(
+            errorData.message ||
+                `Received status ${response.status} when signing up. Expected 201`
+        );
+    }
 }

@@ -29,7 +29,7 @@ async function createPost(req, res) {
     if (user._id.toString() !== req.user_id) {
       return res.status(403).json({ error: "Unauthorized to create post" });
     }
-
+    
     const maxLength = 500;
     if (text.length > maxLength) {
       return res

@@ -1,31 +1,71 @@
 #root {
-  margin: 0 auto;
-  text-align: center;
+    margin: 0 auto;
+    text-align: center;
+    width: 650px;
 }
 
 .round-edge {
-  border: #9b9b9b;
-  border-radius: 1rem;
+    border: #9b9b9b;
+    border-radius: 1rem;
 }
 
 .primary-text-color {
-  color: rgb(39, 63, 27);
+    color: rgb(39, 63, 27);
 }
 
 .primary-background-color {
-  background-color: rgb(237, 237, 237);
+    background-color: rgb(237, 237, 237);
 }
 
 .std-padding {
-  padding: 0.5rem;
-  margin: 0.5rem 1rem;
+    padding: 0.5rem;
+    margin: 0.5rem 1rem;
 }
 
 .vertical-items {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .hidden {
-  display: none;
+    display: none;
+}
+
+/* Global button styling: */
+
+.button {
+    text-decoration: none;
+    padding: 0.5rem 1.2rem;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    filter: drop-shadow(0 0 0.2rem #d69723);
+    background-color: #d69723;
+    color: white;
+}
+
+.button:hover {
+    background-color: #c1881e;
+    color: white;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    .button {
+        display: block;
+        width: 300px;
+        margin: 0px auto;
+    }
+}
+
+/* Containers styles */
+.content-container {
+    background-color: #ededed;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: #575c0f;
+    overflow: hidden;
 }
