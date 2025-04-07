@@ -44,7 +44,7 @@ export function FeedPage() {
       <h2>Posts</h2>
       <div className="feed" role="feed">
         <CreatePostForm onPostCreated={handlePostCreated} />
-        {posts.map((post) => (
+        {posts.map((post, index) => (
           <div className={"round-edge white-text " + ((index % 2) == 0 ? "brown" : "yellow")}>
             <Post
               post={post}
