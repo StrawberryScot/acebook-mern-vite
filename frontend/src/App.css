@@ -5,8 +5,10 @@
 }
 
 .round-edge {
+    position: relative;
     border: #9b9b9b;
     border-radius: 1rem;
+    z-index: 2;
 }
 
 .primary-text-color {
@@ -31,22 +33,20 @@
     display: none;
 }
 
-/* Global button styling: */
-
 .button {
     text-decoration: none;
-    padding: 0.5rem 1.2rem;
-    border-radius: 10px;
     font-weight: 600;
     transition: all 0.2s ease;
     filter: drop-shadow(0 0 0.2rem #d69723);
     background-color: #d69723;
     color: white;
+    z-index: 3;
 }
 
 .button:hover {
     background-color: #c1881e;
     color: white;
+    cursor: pointer;
 }
 
 /* Media queries for responsiveness */
@@ -60,7 +60,6 @@
 
 /* Containers styles */
 .content-container {
-    background-color: #ededed;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -68,4 +67,14 @@
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     color: #575c0f;
     overflow: hidden;
+}
+
+textarea {
+    position: relative;
+    z-index: 3;
+}
+
+button {
+    position: relative;
+    z-index: 3;
 }

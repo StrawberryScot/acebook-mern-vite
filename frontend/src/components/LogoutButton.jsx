@@ -12,7 +12,7 @@ function LogoutButton() {
         navigate("/");
     }
 
-    return <button onClick={logOut}>Log out</button>;
+    return <button onClick={logOut} className="round-edge primary-text-color primary-background-color std-padding button">Log out</button>;
 }
 
 export default LogoutButton;

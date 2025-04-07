@@ -96,7 +96,12 @@ export function SignupForm() {
           value={lastName}
           onChange={handleLastNameChange}
         />
-        <input role="submit-button" id="submit" type="submit" value="Submit" />
+        <input 
+          className="round-edge primary-text-color primary-background-color std-padding button"
+          role="submit-button"
+          id="submit"
+          type="submit"
+          value="Submit" />
       </form>
     </>
   );

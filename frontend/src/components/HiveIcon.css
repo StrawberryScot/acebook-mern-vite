@@ -1,8 +1,10 @@
 .yellow {
     background-color: #d69723;
+    filter: drop-shadow(0 0 0.2rem #d69723);
 }
 .brown {
     background-color: #392625;
+    filter: drop-shadow(0 0 0.2rem #392625);
 }
 
 .hive-icon {

@@ -42,7 +42,6 @@ export function LoginForm() {
 
     return (
         <>
-            <h2>Login</h2>
             {errorMessage && (
                 <div
                     className="error-message"
@@ -73,10 +72,11 @@ export function LoginForm() {
                     onChange={handlePasswordChange}
                 />
                 <input
+                    className="round-edge primary-text-color primary-background-color std-padding button"
                     role="submit-button"
                     id="submit"
                     type="submit"
-                    value="Submit"
+                    value="Login"
                 />
             </form>
         </>

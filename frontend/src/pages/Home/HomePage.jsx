@@ -4,6 +4,7 @@ import images from "../../images";
 import HexagonBackground from "../../components/HexagonBackground";
 import { HivemindLogo } from "../../components/HivemindLogo";
 import HiveIcon from "../../components/HiveIcon"
+import ThemeToggle from "../../components/ThemeToggle";
 
 export function HomePage() {
 
@@ -14,10 +15,8 @@ export function HomePage() {
 
   return (
     <div className="home-container" id="home-container">
-      <div className="background-pattern">
-        <HexagonBackground />
-      </div>
-      <div className="scroll-indicator">
+      <ThemeToggle />
+      <div className="scroll-indicator si-light">
         <p>SCROLL &#8595;</p>
       </div>
       <div className="main-section">
