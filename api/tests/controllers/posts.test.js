@@ -460,4 +460,10 @@ describe("/posts", () => {
       expect(response.status).toEqual(401);
     });
   });
+
+
+// tests for getting users name by their ID
+
+describe 
+
 })
