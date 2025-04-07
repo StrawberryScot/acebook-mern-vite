@@ -48,3 +48,19 @@
     opacity: 0.4;
     transition-duration: 0s;
 }
+
+.hexagon-filled-light {
+  height: 5rem; /* adjust to control the size  */
+  aspect-ratio: 1/cos(30deg);
+  clip-path: polygon(50% -50%,100% 50%,50% 150%,0 50%);
+  background: #ffffff;
+  opacity: 0.2;
+  position: fixed;
+  transition-duration: 1s;
+}
+
+.hexagon-filled-light:hover {
+  background-color: #ffaa00;
+  opacity: 0.4;
+  transition-duration: 0s;
+}

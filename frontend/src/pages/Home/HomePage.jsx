@@ -14,10 +14,10 @@ export function HomePage() {
 
   return (
     <div className="home-container" id="home-container">
-      <div className="background-pattern">
+      <div className="background-pattern-light">
         <HexagonBackground />
       </div>
-      <div className="scroll-indicator">
+      <div className="scroll-indicator si-light">
         <p>SCROLL &#8595;</p>
       </div>
       <div className="main-section">

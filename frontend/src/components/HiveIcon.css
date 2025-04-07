@@ -24,6 +24,7 @@
     z-index: 3000;
     outline: solid 0.5rem white;
     border-radius: 2rem;
+    filter: drop-shadow(0 0 0.2rem #d69723);
 }
 .hive-bar-small {
     width: 16rem;
@@ -33,4 +34,5 @@
     z-index: 3000;
     outline: solid 0.5rem white;
     border-radius: 2rem;
+    filter: drop-shadow(0 0 0.2rem #d69723);
 }
