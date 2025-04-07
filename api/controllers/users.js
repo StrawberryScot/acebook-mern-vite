@@ -56,11 +56,13 @@ const getUserByToken = async (req, res) => {
 
 const getNameById = async (req, res) => {
   const userId = req.params.id;
+  
   console.log("Incoming user ID param:", req.params.id);
 
   if (!userId || userId.length !== 24) {
     return res.status(400).json({ message: "Invalid user ID format" });
   }
+
   console.log(`THIS IS THE USER ID: ${userId}`);
 
   try {
@@ -77,6 +79,7 @@ const getNameById = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 const UsersController = {
   create: create,

@@ -205,7 +205,7 @@ describe("/users", () => {
         backgroundPicPath: "test-back-address",
         isOnlyFriends: false,
       });
-      const response = await request(app).get(`/users/${coolUser._id}`);
+      const response = await request(app).get(`/users/${coolUser._id}/name`);
       console.log("Test user ID:", coolUser._id);
 
 
@@ -217,7 +217,7 @@ describe("/users", () => {
     });
     test("it returns 404 for a non-existing user", async () => {
       const fakeId = "0000a9c8902d41b7360e9693";
-      const response = await request(app).get(`/users/${fakeId}`);
+      const response = await request(app).get(`/users/${fakeId}/name`);
       expect(response.statusCode).toBe(404);
       expect(response.body.message).toEqual("User does NOT exist!");
     });
