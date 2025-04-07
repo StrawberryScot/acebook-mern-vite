@@ -4,6 +4,7 @@ import images from "../../images";
 import HexagonBackground from "../../components/HexagonBackground";
 import { HivemindLogo } from "../../components/HivemindLogo";
 import HiveIcon from "../../components/HiveIcon"
+import ThemeToggle from "../../components/ThemeToggle";
 
 export function HomePage() {
 
@@ -14,6 +15,7 @@ export function HomePage() {
 
   return (
     <div className="home-container" id="home-container">
+      <ThemeToggle />
       <div className="background-pattern-light">
         <HexagonBackground />
       </div>
