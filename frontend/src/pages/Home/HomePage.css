@@ -9,16 +9,6 @@
     overflow: hidden;
 }
 
-.background-pattern {
-    height: 100vh;
-    width: 100vw;
-    left: 0;
-    position: fixed;
-    background-image: radial-gradient(#67676741 1px, #392625 0.5px);
-    background-size: 10px 10px;
-    background-attachment: fixed, #b7b7b7;
-}
-
 .filler {
     height: 300vh;
 }
@@ -44,40 +34,28 @@
     pointer-events: none;
 }
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    filter: drop-shadow(0 0 0.2rem #d69723);
-}
-
-.logo img {
-    height: 5rem;
-    margin-bottom: 20px;
-    margin-top: 20px;
-}
-
 .login-btn,
 .signup-btn {
     text-decoration: none;
     padding: 0.5rem 1.2rem;
     border-radius: 1rem;
     font-weight: 600;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     filter: drop-shadow(0 0 0.2rem #d69723);
 }
 
 .signup-btn,
 .login-btn {
-    background-color: #d69723;
-    color: white;
+    background-color: #e9a425;
+    color: rgb(238, 238, 238);
     pointer-events: all;
 }
 
 .signup-btn:hover,
 .login-btn:hover {
-    background-color: #c1881e;
-    color: white;
+    background-color: #392625;
+    color: rgb(207, 207, 207);
+    filter: drop-shadow(0 0 0.2rem #392625);
 }
 
 .cta-buttons {
@@ -92,9 +70,8 @@
     width: 100%;
     left: 0;
     top: 0;
-    flex-direction: column;
-    justify-content: center;
-    flex: 1;
+    flex-direction: row;
+    justify-content: right;
     position: fixed;
     z-index: 5;
     pointer-events: none;
@@ -133,7 +110,7 @@
     --size: 20vmin;
     position: fixed;
     top: 50%;
-    left: 50%;
+    right: 50%;
     width: 0;
     height: 0;
     perspective: 100vmin;
@@ -172,11 +149,19 @@
 .scroll-indicator {
     position: fixed;
     top: 85vh;
+    left: 48%;
     font-size: x-large;
+}
+
+.si-light {
+    color: rgb(110, 110, 110);
+    filter: drop-shadow(0 0 0.2rem #6e6e6e);
+}
+
+.si-dark {
     color: rgb(229, 0, 0);
     filter: drop-shadow(0 0 0.3rem #ff0000);
 }
-
 
 .home-container * {
     /* Pause the animation */
@@ -190,13 +175,15 @@
 
 .scroll-indicator {
     animation-play-state: running;
-    animation: scroll-indicator 5s infinite;
+    animation: scroll-indicator 6s infinite;
     opacity: 0;
 }
+
+
 @keyframes scroll-indicator {
     0% { opacity: 0; }
     50% { opacity: 0; }
-    65% { opacity: 1; }
-    80% { opacity: 1; }
+    65% { opacity: 0.7; }
+    80% { opacity: 0.7; }
     100% { opacity: 0; }
 }

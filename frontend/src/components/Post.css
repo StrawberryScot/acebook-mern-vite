@@ -1,0 +1,15 @@
+.yellow {
+    background-color: #d69723;
+    outline: solid 0.5rem #d48a00;
+}
+.brown {
+    background-color: #392625;
+    outline: solid 0.5rem #2c121e;
+}
+
+.white-text {
+    color: white;
+    padding: 1rem 2rem;
+    margin: 0rem 1rem;
+    border-radius: 3rem;
+}

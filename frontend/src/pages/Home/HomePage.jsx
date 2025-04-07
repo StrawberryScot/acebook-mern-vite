@@ -4,6 +4,7 @@ import images from "../../images";
 import HexagonBackground from "../../components/HexagonBackground";
 import { HivemindLogo } from "../../components/HivemindLogo";
 import HiveIcon from "../../components/HiveIcon";
+import ThemeToggle from "../../components/ThemeToggle";
 
 export function HomePage() {
   window.addEventListener(
@@ -24,28 +25,25 @@ export function HomePage() {
 
   return (
     <div className="home-container" id="home-container">
-      <div className="background-pattern"></div>
-      <HexagonBackground />
-      <HiveIcon />
-      <div className="scroll-indicator">
+      <ThemeToggle />
+      <div className="scroll-indicator si-light">
         <p>SCROLL &#8595;</p>
       </div>
       <div className="main-section">
-        <div class="cube-wrap">
-          <div class="cube">
-            <div class="side back">
-              <Link to="/signup" className="signup-btn">
-                Sign Up
-              </Link>
+        <HiveIcon />
+        <div className="cube-wrap">
+          <div className="cube">
+            <div className="side back">
+                <Link to="/signup" className="signup-btn">
+                  Sign Up
+                </Link>
             </div>
-            <div class="side bottom">
-              <Link to="/login" className="login-btn">
-                Log In
-              </Link>
+            <div className="side bottom">
+                <Link to="/login" className="login-btn">
+                  Log In
+                </Link>
             </div>
-            <div class="side front">
-              <HivemindLogo />
-            </div>
+            <div className="side front"><HivemindLogo /></div>
           </div>
         </div>
       </div>
