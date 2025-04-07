@@ -5,6 +5,7 @@
 }
 
 .round-edge {
+    position: relative;
     border: #9b9b9b;
     border-radius: 1rem;
     z-index: 2;

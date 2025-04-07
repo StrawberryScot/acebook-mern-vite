@@ -10,6 +10,7 @@ import LogoutButton from "../../components/LogoutButton";
 import { Navbar } from "../../components/navbar/Navbar";
 import "../../App.css";
 import { useSelector } from "react-redux";
+import "../../components/Post.css";
 
 export function FeedPage() {
     const [posts, setPosts] = useState([]);
@@ -42,9 +43,11 @@ export function FeedPage() {
             <Navbar />
             <h2>Posts</h2>
             <div className="feed" role="feed">
-            <CreatePostForm onPostCreated={handlePostCreated} />
-                {posts.map((post) => (
-                    <Post post={post} key={post._id} />
+                <CreatePostForm onPostCreated={handlePostCreated} />
+                {posts.map((post, index) => (
+                    <div className={"round-edge white-text " + ((index % 2) == 0 ? "brown" : "yellow")}>
+                        <Post post={post} key={post._id} />
+                    </div>
                 ))}
             </div>
             <LogoutButton />
