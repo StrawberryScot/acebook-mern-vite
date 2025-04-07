@@ -41,6 +41,7 @@
     opacity: 0.2;
     position: fixed;
     transition-duration: 1s;
+    z-index: 0;
   }
 
 .hexagon-filled:hover {
@@ -57,10 +58,35 @@
   opacity: 0.2;
   position: fixed;
   transition-duration: 1s;
+  z-index: 0;
 }
 
 .hexagon-filled-light:hover {
   background-color: #ffaa00;
   opacity: 0.4;
   transition-duration: 0s;
+}
+
+.background-pattern-dark {
+  height: 100vh;
+  width: 100vw;
+  left: 0;
+  top: 0;
+  position: fixed;
+  background-image: radial-gradient(#67676741 1px, #392625 0.5px);
+  background-size: 10px 10px;
+  background-attachment: fixed, #b7b7b7;
+  z-index: -5;
+}
+
+.background-pattern-light {
+  height: 100vh;
+  width: 100vw;
+  left: 0;
+  top: 0;
+  position: fixed;
+  background-image: radial-gradient(#67676741 1px, #cbcbcb 0.5px);
+  background-size: 10px 10px;
+  background-attachment: fixed, #b7b7b7;
+  z-index: -5;
 }

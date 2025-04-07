@@ -16,6 +16,7 @@ const HexagonBackground = () => {
 
     return (
         <>
+            <div className="background-pattern-light"></div>
             {hexagons}
         </>
     );

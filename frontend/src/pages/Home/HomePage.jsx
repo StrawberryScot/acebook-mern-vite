@@ -16,9 +16,6 @@ export function HomePage() {
   return (
     <div className="home-container" id="home-container">
       <ThemeToggle />
-      <div className="background-pattern-light">
-        <HexagonBackground />
-      </div>
       <div className="scroll-indicator si-light">
         <p>SCROLL &#8595;</p>
       </div>
