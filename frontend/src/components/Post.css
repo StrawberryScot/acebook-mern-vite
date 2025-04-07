@@ -1,15 +1,25 @@
 .yellow {
-    background-color: #d69723;
-    outline: solid 0.5rem #d48a00;
+  background-color: #d69723;
+  outline: solid 0.5rem #d48a00;
+  text-align: left;
 }
 .brown {
-    background-color: #392625;
-    outline: solid 0.5rem #2c121e;
+  background-color: #392625;
+  outline: solid 0.5rem #2c121e;
+  text-align: left;
+}
+
+.posterName {
+  font-size: 18px;
 }
 
 .white-text {
-    color: white;
-    padding: 1rem 2rem;
-    margin: 0rem 1rem;
-    border-radius: 3rem;
+  color: white;
+  padding: 1rem 2rem;
+  margin: 0rem 1rem;
+  border-radius: 3rem;
+  margin-bottom: 40px;
+  margin-top: 20px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 300;
 }
