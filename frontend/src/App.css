@@ -60,7 +60,6 @@
 
 /* Containers styles */
 .content-container {
-    background-color: #ededed;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
