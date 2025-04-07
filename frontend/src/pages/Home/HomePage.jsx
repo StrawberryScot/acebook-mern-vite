@@ -3,15 +3,25 @@ import "./HomePage.css";
 import images from "../../images";
 import HexagonBackground from "../../components/HexagonBackground";
 import { HivemindLogo } from "../../components/HivemindLogo";
-import HiveIcon from "../../components/HiveIcon"
+import HiveIcon from "../../components/HiveIcon";
 import ThemeToggle from "../../components/ThemeToggle";
 
 export function HomePage() {
-
-  window.addEventListener('scroll', () => {
-    document.getElementById("home-container").style.setProperty('--scroll', window.pageYOffset / (document.body.offsetHeight - window.innerHeight));
-    console.log(window.pageYOffset / (document.body.offsetHeight - window.innerHeight));
-  }, false);
+  window.addEventListener(
+    "scroll",
+    () => {
+      document
+        .getElementById("home-container")
+        .style.setProperty(
+          "--scroll",
+          window.pageYOffset / (document.body.offsetHeight - window.innerHeight)
+        );
+      console.log(
+        window.pageYOffset / (document.body.offsetHeight - window.innerHeight)
+      );
+    },
+    false
+  );
 
   return (
     <div className="home-container" id="home-container">

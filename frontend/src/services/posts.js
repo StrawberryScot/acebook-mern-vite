@@ -66,6 +66,29 @@ export async function deletePost(token, postId) {
   return data;
 }
 
+export async function updatePost(token, postId, text) {
+  const requestOptions = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ text }),
+  };
+
+  const response = await fetch(
+    `${BACKEND_URL}/posts/${postId}`,
+    requestOptions
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Unable to update post");
+  }
+
+  const data = await response.json();
+  return data.posts; // Assuming your backend returns the updated post in this format
+}
+
 // Simple function to extract user ID from token
 function extractUserIdFromToken(token) {
   try {
