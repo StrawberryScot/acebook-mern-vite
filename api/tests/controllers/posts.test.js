@@ -44,7 +44,7 @@ describe("/posts", () => {
 
   beforeEach(async () => {
     await Post.deleteMany({});
-  })
+  });
 
   afterEach(async () => {
     await Post.deleteMany({});
@@ -139,8 +139,8 @@ describe("/posts", () => {
       // Clear posts before each test
       await Post.deleteMany({});
 
-    // beforeAll(async () => {
-    //   // Create a user and generate a token before the tests run
+      // beforeAll(async () => {
+      //   // Create a user and generate a token before the tests run
       testUserData.email = "post-test@test.com";
       testUserData.password = "12345678";
       user = new User(testUserData);
@@ -149,26 +149,25 @@ describe("/posts", () => {
       // Generate a token
       token = createToken(user._id.toString());
 
+      post1 = new Post({
+        postedBy: user._id,
+        text: "I am an original post!",
+      });
 
-    post1 = new Post({
-      postedBy: user._id,
-      text: "I am an original post!",
+      // Save the post to the database
+      await post1.save();
     });
 
-    // Save the post to the database
-    await post1.save();
-  });
-
-  afterEach(async () => {
-    // Clean up after each test
-    await Post.deleteMany({});
-  });
+    afterEach(async () => {
+      // Clean up after each test
+      await Post.deleteMany({});
+    });
 
     test("responds with a 200", async () => {
       const response = await request(app)
-      .put(`/posts/${post1._id.toString()}`)  // Use the actual post's _id
-      .set("Authorization", `Bearer ${token}`)
-      .send({ text: "I am an updated post!" });
+        .put(`/posts/${post1._id.toString()}`) // Use the actual post's _id
+        .set("Authorization", `Bearer ${token}`)
+        .send({ text: "I am an updated post!" });
 
       expect(response.status).toEqual(200);
     });
@@ -229,15 +228,15 @@ describe("/posts", () => {
 
     test("delete a single post", async () => {
       const response = await request(app)
-      .delete(`/posts/${post1._id.toString()}`)
-      .set("Authorization", `Bearer ${token}`)
+        .delete(`/posts/${post1._id.toString()}`)
+        .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(200);
-      expect(response.body.message).toBe('Post deleted successfully');
+      expect(response.body.message).toBe("Post deleted successfully");
 
       const deletedPost = await Post.findById(`${post1._id.toString()}`);
       expect(deletedPost).toBeNull();
-    })
+    });
   });
 
   // Test like and unlike
@@ -247,10 +246,10 @@ describe("/posts", () => {
     let likePost;
 
     beforeAll(async () => {
-     likeUser = new User(testUserData);
-     await likeUser.save();
-     
-     likeToken = createToken(likeUser._id.toString());
+      likeUser = new User(testUserData);
+      await likeUser.save();
+
+      likeToken = createToken(likeUser._id.toString());
     });
 
     beforeEach(async () => {
@@ -274,23 +273,23 @@ describe("/posts", () => {
           .put(`/posts/like/${likePost._id}`)
           .set("Authorization", `Bearer ${likeToken}`);
 
-          expect(response.status).toEqual(200);
-          expect(response.body.message).toEqual("Post liked");
+        expect(response.status).toEqual(200);
+        expect(response.body.message).toEqual("Post liked");
 
-          const updatedPost = await Post.findById(likePost._id);
-          expect(updatedPost.likes).toContainEqual(likeUser._id);
-          expect(updatedPost.likes.length).toEqual(1);
+        const updatedPost = await Post.findById(likePost._id);
+        expect(updatedPost.likes).toContainEqual(likeUser._id);
+        expect(updatedPost.likes.length).toEqual(1);
       });
 
       test("unlikes a post when previously liked", async () => {
         await Post.updateOne(
-          { _id: likePost._id }, 
+          { _id: likePost._id },
           { $push: { likes: likeUser._id } }
         );
 
         const response = await request(app)
-        .put(`/posts/like/${likePost._id}`)
-        .set("Authorization", `Bearer ${likeToken}`);
+          .put(`/posts/like/${likePost._id}`)
+          .set("Authorization", `Bearer ${likeToken}`);
 
         expect(response.status).toEqual(200);
         expect(response.body.message).toEqual("Post unliked");
@@ -305,30 +304,31 @@ describe("/posts", () => {
         const response = await request(app)
           .put(`/posts/like/${invalidPostId}`)
           .set("Authorization", `Bearer ${likeToken}`);
-  
+
         expect(response.status).toEqual(404);
         expect(response.body.error).toEqual("Post not found");
       });
-  
+
       test("returns 401 without token", async () => {
-          const response = await request(app)
-            .put(`/posts/like/${likePost._id}`);
-  
-          expect(response.status).toEqual(401);
+        const response = await request(app).put(`/posts/like/${likePost._id}`);
+
+        expect(response.status).toEqual(401);
       });
-  
+
       test("returns 500 on database error", async () => {
-          // Mock Post.findById to throw an error
-          const findByIdMock = jest.spyOn(Post, 'findById').mockRejectedValue(new Error('Database error'));
-  
-          const response = await request(app)
-            .put(`/posts/like/${likePost._id}`)
-            .set("Authorization", `Bearer ${likeToken}`);
-  
-          expect(response.status).toEqual(500);
-          expect(response.body.error).toEqual('Database error');
-  
-          findByIdMock.mockRestore(); // Restore the original function
+        // Mock Post.findById to throw an error
+        const findByIdMock = jest
+          .spyOn(Post, "findById")
+          .mockRejectedValue(new Error("Database error"));
+
+        const response = await request(app)
+          .put(`/posts/like/${likePost._id}`)
+          .set("Authorization", `Bearer ${likeToken}`);
+
+        expect(response.status).toEqual(500);
+        expect(response.body.error).toEqual("Database error");
+
+        findByIdMock.mockRestore(); // Restore the original function
       }, 10000); // give the connection to Atlas MongoDB more time to operate
     });
   });
@@ -423,7 +423,9 @@ describe("/posts", () => {
     test("returns 404 for non-existent post", async () => {
       const invalidPostId = new mongoose.Types.ObjectId();
       const response = await request(app)
-        .post(`/posts/${invalidPostId}/comments/${post.comments[0]._id}/replies`)
+        .post(
+          `/posts/${invalidPostId}/comments/${post.comments[0]._id}/replies`
+        )
         .set("Authorization", `Bearer ${token}`)
         .send({ text: "Test reply" });
 
@@ -460,10 +462,4 @@ describe("/posts", () => {
       expect(response.status).toEqual(401);
     });
   });
-
-
-// tests for getting users name by their ID
-
-describe 
-
-})
+});
