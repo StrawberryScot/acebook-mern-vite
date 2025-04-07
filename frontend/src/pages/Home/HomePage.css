@@ -80,6 +80,12 @@
     color: white;
 }
 
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
 .main-section {
     display: flex;
     height: 100%;
@@ -107,19 +113,8 @@
     filter: drop-shadow(0 0 0.2rem #575c0f55);
 }
 
-.cta-buttons {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
-}
-
 /* Media queries for responsiveness */
 @media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        padding: 1rem;
-    }
-
     .main-section h1 {
         font-size: 2.5rem;
     }
@@ -131,17 +126,6 @@
     .cta-buttons {
         flex-direction: column;
         width: 100%;
-        max-width: 300px;
-    }
-
-    .auth-links {
-        width: 100%;
-    }
-
-    .login-btn {
-        display: block;
-        max-width: 300px;
-        margin: 0px auto;
     }
 }
 

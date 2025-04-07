@@ -3,43 +3,51 @@ import { useNavigate } from "react-router-dom";
 
 import { getPosts } from "../../services/posts";
 import Post from "../../components/Post";
+import CreatePostForm from "../../components/CreatePostForm";
+import { HivemindLogo } from "../../components/HivemindLogo";
 import LogoutButton from "../../components/LogoutButton";
 
+import { Navbar } from "../../components/navbar/Navbar";
+import "../../App.css";
+import { useSelector } from "react-redux";
+
 export function FeedPage() {
-  const [posts, setPosts] = useState([]);
-  const navigate = useNavigate();
-
-  useEffect(() => {
+    const [posts, setPosts] = useState([]);
+    const navigate = useNavigate();
+    const user = useSelector((state) => state.user.user);
     const token = localStorage.getItem("token");
-    const loggedIn = token !== null;
-    if (loggedIn) {
-      getPosts(token)
-        .then((data) => {
-          setPosts(data.posts);
-          localStorage.setItem("token", data.token);
-        })
-        .catch((err) => {
-          console.error(err);
-          navigate("/login");
-        });
-    }
-  }, [navigate]);
+    const handlePostCreated = (newPost) => {
+    setPosts([newPost, ...posts]); // Add new post to the top of the feed
+    };
+  
+    useEffect(() => {
+        const loggedIn = user !== null;
+        if (loggedIn) {
+            getPosts(token)
+                .then((data) => {
+                    setPosts(data.posts);
+                })
+                .catch((err) => {
+                    console.error(err);
+                    navigate("/login");
+                });
+        } else {
+            navigate("/login");
+            return;
+        }
+    }, [navigate, user]);
 
-  const token = localStorage.getItem("token");
-  if (!token) {
-    navigate("/login");
-    return;
-  }
-
-  return (
-    <>
-      <h2>Posts</h2>
-      <div className="feed" role="feed">
-        {posts.map((post) => (
-          <Post post={post} key={post._id} />
-        ))}
-      </div>
-      <LogoutButton />
-    </>
-  );
-}
+    return (
+        <div className="content-container">
+            <Navbar />
+            <h2>Posts</h2>
+            <div className="feed" role="feed">
+            <CreatePostForm onPostCreated={handlePostCreated} />
+                {posts.map((post) => (
+                    <Post post={post} key={post._id} />
+                ))}
+            </div>
+            <LogoutButton />
+        </div>
+    );
+};

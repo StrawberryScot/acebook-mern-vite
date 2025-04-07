@@ -1,6 +1,4 @@
 import { Link } from "react-router-dom";
-import { HivemindLogo } from "../../components/HivemindLogo";
-import { useState, useEffect } from "react";
 import "./HomePage.css";
 import images from "../../images";
 import HexagonBackground from "../../components/HexagonBackground";
