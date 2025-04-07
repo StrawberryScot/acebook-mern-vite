@@ -1,0 +1,36 @@
+.yellow {
+    background-color: #d69723;
+}
+.brown {
+    background-color: #392625;
+}
+
+.hive-icon {
+    position: fixed;
+    top: 36vh;
+    left: 14vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+}
+
+
+.hive-bar-large {
+    width: 20rem;
+    height: 2rem;
+    margin: 1rem;
+    opacity: 0.9;
+    z-index: 3000;
+    outline: solid 0.5rem white;
+    border-radius: 2rem;
+}
+.hive-bar-small {
+    width: 16rem;
+    height: 2rem;
+    margin: 1rem;
+    opacity: 0.9;
+    z-index: 3000;
+    outline: solid 0.5rem white;
+    border-radius: 2rem;
+}

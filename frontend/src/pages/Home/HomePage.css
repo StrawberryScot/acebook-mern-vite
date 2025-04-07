@@ -1,5 +1,5 @@
 .home-container {
-    background-color: #ededed;
+    background-color: transparent;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -9,10 +9,39 @@
     overflow: hidden;
 }
 
-body {
-    background-image: radial-gradient(#575c0f41 1px, #ededed 0.5px);
+.background-pattern {
+    height: 100vh;
+    width: 100vw;
+    left: 0;
+    position: fixed;
+    background-image: radial-gradient(#67676741 1px, #392625 0.5px);
     background-size: 10px 10px;
-    background-attachment: scroll, #b7b7b7;
+    background-attachment: fixed, #b7b7b7;
+}
+
+.filler {
+    height: 300vh;
+}
+
+.home-container * {
+    /* Pause the animation */
+    animation-play-state: paused;
+    /* Bind the animation to scroll */
+    animation-delay: calc(var(--scroll) * -1s);
+    /* These last 2 properites clean up overshoot weirdness */
+    animation-iteration-count: 1;
+    animation-fill-mode: both;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: transparent;
+    position: relative;
+    z-index: 10;
+    pointer-events: none;
 }
 
 .logo {
@@ -23,9 +52,32 @@ body {
 }
 
 .logo img {
-    height: 50px;
+    height: 5rem;
     margin-bottom: 20px;
     margin-top: 20px;
+}
+
+.login-btn,
+.signup-btn {
+    text-decoration: none;
+    padding: 0.5rem 1.2rem;
+    border-radius: 1rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    filter: drop-shadow(0 0 0.2rem #d69723);
+}
+
+.signup-btn,
+.login-btn {
+    background-color: #d69723;
+    color: white;
+    pointer-events: all;
+}
+
+.signup-btn:hover,
+.login-btn:hover {
+    background-color: #c1881e;
+    color: white;
 }
 
 .cta-buttons {
@@ -36,14 +88,16 @@ body {
 
 .main-section {
     display: flex;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    text-align: center;
-    padding: 6rem 2rem;
     flex: 1;
-    position: relative;
+    position: fixed;
     z-index: 5;
+    pointer-events: none;
 }
 
 .main-section h1 {
@@ -73,4 +127,76 @@ body {
         flex-direction: column;
         width: 100%;
     }
+}
+
+.cube-wrap {
+    --size: 20vmin;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    perspective: 100vmin;
+  }
+  .cube {
+    transform-style: preserve-3d;
+    animation: cube 2s linear;
+  }
+  @keyframes cube {
+    to {
+      transform: rotateX(360deg);
+    }
+  }
+  .side {
+    position: absolute;
+    width: var(--size);
+    height: var(--size);
+    backface-visibility: hidden;
+    top: calc(var(--size) * -.5);
+    left: calc(var(--size) * -.5);
+    display: flex;
+  }
+  .front {
+    transform: translateZ(calc(var(--size) * 0.5));
+    align-items: center;
+  }
+  .bottom {
+    transform: rotateX(270deg) translateZ(calc(var(--size) * 0.5));
+    align-items: center;
+  }
+.back {
+    transform: rotateX(180deg) translateZ(calc(var(--size) * 0.5));
+    align-items: center;
+  }
+
+.scroll-indicator {
+    position: fixed;
+    top: 85vh;
+    font-size: x-large;
+    color: rgb(229, 0, 0);
+    filter: drop-shadow(0 0 0.3rem #ff0000);
+}
+
+
+.home-container * {
+    /* Pause the animation */
+    animation-play-state: paused;
+    /* Bind the animation to scroll */
+    animation-delay: calc(var(--scroll) * -1s);
+    /* These last 2 properites clean up overshoot weirdness */
+    animation-iteration-count: 1;
+    animation-fill-mode: both;
+  }
+
+.scroll-indicator {
+    animation-play-state: running;
+    animation: scroll-indicator 5s infinite;
+    opacity: 0;
+}
+@keyframes scroll-indicator {
+    0% { opacity: 0; }
+    50% { opacity: 0; }
+    65% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
 }
