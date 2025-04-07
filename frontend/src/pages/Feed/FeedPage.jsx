@@ -52,6 +52,13 @@ export function FeedPage() {
                 prevPosts.filter((p) => p._id !== deletedPostId)
               );
             }}
+            onPostUpdated={(updatedPost) => {
+              setPosts((prevPosts) =>
+                prevPosts.map((p) =>
+                  p._id === updatedPost._id ? updatedPost : p
+                )
+              );
+            }}
           />
         ))}
       </div>
