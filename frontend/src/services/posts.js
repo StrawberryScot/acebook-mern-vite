@@ -45,6 +45,27 @@ export async function createPost(token, text) {
   return data;
 }
 
+export async function deletePost(token, postId) {
+  const requestOptions = {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await fetch(
+    `${BACKEND_URL}/posts/${postId}`,
+    requestOptions
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Unable to delete post");
+  }
+
+  const data = await response.json();
+  return data;
+}
+
 // Simple function to extract user ID from token
 function extractUserIdFromToken(token) {
   try {

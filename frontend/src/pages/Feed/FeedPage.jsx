@@ -12,42 +12,50 @@ import "../../App.css";
 import { useSelector } from "react-redux";
 
 export function FeedPage() {
-    const [posts, setPosts] = useState([]);
-    const navigate = useNavigate();
-    const user = useSelector((state) => state.user.user);
-    const token = localStorage.getItem("token");
-    const handlePostCreated = (newPost) => {
+  const [posts, setPosts] = useState([]);
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.user.user);
+  const token = localStorage.getItem("token");
+  const handlePostCreated = (newPost) => {
     setPosts([newPost, ...posts]); // Add new post to the top of the feed
-    };
-  
-    useEffect(() => {
-        const loggedIn = user !== null;
-        if (loggedIn) {
-            getPosts(token)
-                .then((data) => {
-                    setPosts(data.posts);
-                })
-                .catch((err) => {
-                    console.error(err);
-                    navigate("/login");
-                });
-        } else {
-            navigate("/login");
-            return;
-        }
-    }, [navigate, user]);
+  };
 
-    return (
-        <div className="content-container">
-            <Navbar />
-            <h2>Posts</h2>
-            <div className="feed" role="feed">
-            <CreatePostForm onPostCreated={handlePostCreated} />
-                {posts.map((post) => (
-                    <Post post={post} key={post._id} />
-                ))}
-            </div>
-            <LogoutButton />
-        </div>
-    );
-};
+  useEffect(() => {
+    const loggedIn = user !== null;
+    if (loggedIn) {
+      getPosts(token)
+        .then((data) => {
+          setPosts(data.posts);
+        })
+        .catch((err) => {
+          console.error(err);
+          navigate("/login");
+        });
+    } else {
+      navigate("/login");
+      return;
+    }
+  }, [navigate, user]);
+
+  return (
+    <div className="content-container">
+      <Navbar />
+      <h2>Posts</h2>
+      <div className="feed" role="feed">
+        <CreatePostForm onPostCreated={handlePostCreated} />
+        {posts.map((post) => (
+          <Post
+            post={post}
+            key={post._id}
+            onPostDeleted={(deletedPostId) => {
+              setPosts((prevPosts) =>
+                prevPosts.filter((p) => p._id !== deletedPostId)
+              );
+            }}
+          />
+        ))}
+      </div>
+      <LogoutButton />
+    </div>
+  );
+}
