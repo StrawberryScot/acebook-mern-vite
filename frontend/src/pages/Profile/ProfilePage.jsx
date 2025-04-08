@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { getUserPosts } from "../../services/posts";
 import { HivemindLogo } from "../../components/HivemindLogo";
 import { Navbar } from "../../components/navbar/Navbar";
 import LogoutButton from "../../components/LogoutButton";
@@ -10,7 +11,10 @@ import "./ProfilePage.css";
 export function ProfilePage() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.user);
+  const token = localStorage.getItem("token");
   const [userPosts, setUserPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     // Check if user is logged in
@@ -19,10 +23,22 @@ export function ProfilePage() {
       return;
     }
 
-    // Here you would fetch the user's posts
-    // For now, we're just setting up the structure
-    // Example: getUserPosts(user._id).then(posts => setUserPosts(posts));
-  }, [user, navigate]);
+    async function fetchUserPosts() {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const posts = await getUserPosts(token);
+        setUserPosts(posts);
+      } catch (err) {
+        console.error("Failed to fetch user posts:", err);
+        setError("Failed to load your posts. Please try again later.");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchUserPosts();
+  }, [user, token, navigate]);
 
   const handleBackToFeed = () => {
     navigate("/posts");
@@ -56,9 +72,7 @@ export function ProfilePage() {
             <p className="profile-email">
               {user?.email || "email@example.com"}
             </p>
-            <p className="profile-bio">
-              John's Bio. Do we need to add a bio option to the schema?
-            </p>
+            <p className="profile-bio">{user?.bio || "No bio available"}</p>
           </div>
         </div>
 
@@ -68,7 +82,9 @@ export function ProfilePage() {
             <span className="stat-label">Posts</span>
           </div>
           <div className="stat-box">
-            <span className="stat-number">0</span>
+            <span className="stat-number">
+              {userPosts.reduce((total, post) => total + post.likes.length, 0)}
+            </span>
             <span className="stat-label">Likes</span>
           </div>
         </div>
@@ -79,19 +95,32 @@ export function ProfilePage() {
 
         <div className="user-posts-section">
           <h3>My Posts</h3>
-          <div className="user-posts">
-            {userPosts.length > 0 ? (
-              userPosts.map((post) => (
-                <div key={post._id} className="user-post-card">
-                  <p>{post.content}</p>
-                </div>
-              ))
-            ) : (
-              <p className="no-posts-message">
-                You haven't created any posts yet!
-              </p>
-            )}
-          </div>
+          {isLoading ? (
+            <p>Loading posts...</p>
+          ) : error ? (
+            <p className="error-message">{error}</p>
+          ) : (
+            <div className="user-posts">
+              {userPosts.length > 0 ? (
+                userPosts.map((post) => (
+                  <div key={post._id} className="user-post-card">
+                    <p>{post.text}</p>
+                    <div className="post-metadata">
+                      <span>
+                        {new Date(post.createdAt).toLocaleDateString()}
+                      </span>
+                      <span>{post.likes.length} likes</span>
+                      <span>{post.comments.length} comments</span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="no-posts-message">
+                  You haven't created any posts yet!
+                </p>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
