@@ -23,3 +23,10 @@
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 300;
 }
+
+.post-date {
+  font-size: 11px;
+  color: #e8e8e8;
+  margin-top: -5px;
+  margin-bottom: 10px;
+}
