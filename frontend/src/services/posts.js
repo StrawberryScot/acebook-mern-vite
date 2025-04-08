@@ -86,7 +86,25 @@ export async function updatePost(token, postId, text) {
   }
 
   const data = await response.json();
-  return data.posts; // Assuming your backend returns the updated post in this format
+  return data.posts;
+}
+
+export async function likeUnlikePost(token, postId) {
+  const requestOptions = {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await fetch(
+    `${BACKEND_URL}/posts/like/${postId}`,
+    requestOptions
+  );
+  if (response.status !== 200) {
+    throw new Error("Unable to Like/Unlike post!");
+  }
+  const data = await response.json();
+  return data;
 }
 
 // Simple function to extract user ID from token

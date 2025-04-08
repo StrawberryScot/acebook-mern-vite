@@ -111,10 +111,6 @@ async function deletePost(req, res) {
 
 async function likeUnlikePost(req, res) {
   try {
-    console.log("likeUnlikePost controller reached");
-    console.log("Post ID:", req.params.id);
-    console.log("User Id:", req.user_id);
-
     const { id: postId } = req.params;
     const userId = req.user_id;
     const post = await Post.findById(postId);
