@@ -1,39 +1,38 @@
 .like-container {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 10px;
-    margin-bottom: 10px; 
-  }
-  
-  .like-button {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    background: none;
-    border: 1px solid #ddd;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s ease;
-  }
-  
-  .like-button:hover {
-    background-color: #f0f2f5;
-  }
-  
-  .like-button.liked {
-    color: #1877f2;
-    border-color: #1877f2;
-    background-color: #e7f3ff;
-  }
-  
-  .liked-icon {
-    color: #1877f2;
-  }
-  
-  .like-count {
-    font-size: 14px;
-    color: rgba(26, 23, 41, 0.808);
-  }
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.like-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: 1px solid #ddd;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.like-button:hover {
+  background-color: #f0f2f5;
+}
+
+.like-button.liked {
+  color: #2e2e2e;
+  background-color: #ffffffd3;
+}
+
+.liked-icon {
+  color: #2e2e2e;
+}
+
+.like-count {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.808);
+}

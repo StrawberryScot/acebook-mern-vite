@@ -45,6 +45,7 @@ export function FeedPage() {
   return (
     <div className="page-container">
       <Navbar />
+
       <div className="content-container">
         <div className="header-container">
           <h2>Posts</h2>
@@ -56,7 +57,7 @@ export function FeedPage() {
               className={
                 "round-edge white-text " + (index % 2 == 0 ? "brown" : "yellow")
               }
-              key={post._id}
+
             >
               <Post
                 post={post}

@@ -190,7 +190,7 @@ async function replyToComment(req, res) {
   try {
     const postId = req.params.postId;
     const commentId = req.params.commentId;
-    const { text } = req.body;
+    const { text, parentReplyId } = req.body;
 
     if (!text || text.trim() === "") {
       return res.status(400).json({ message: "Reply text is required" });
@@ -211,6 +211,7 @@ async function replyToComment(req, res) {
     const newReply = {
       repliedBy: req.user_id,
       text,
+      parentReplyId, // Store the parent reply ID if replying to another reply
     };
 
     comment.replies.push(newReply);

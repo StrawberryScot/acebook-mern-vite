@@ -60,10 +60,23 @@ const PostSchema = new mongoose.Schema(
               ref: "User",
               default: [],
             },
-            
-            // blocking nested reply for now
-            // replies: [this],
-          }
+
+            parentReplyId: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "User",
+              default: null,
+            },
+
+            createdAt: {
+              type: Date,
+              default: Date.now,
+            },
+
+            updatedAt: {
+              type: Date,
+              default: Date.now,
+            },
+          },
         ],
         createdAt: {
           type: Date,
