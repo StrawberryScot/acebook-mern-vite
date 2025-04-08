@@ -37,7 +37,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); // for persisting login
 
   useEffect(() => {
     const token = localStorage.getItem("token");

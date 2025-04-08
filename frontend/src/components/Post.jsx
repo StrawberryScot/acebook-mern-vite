@@ -209,8 +209,14 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
       }
 
       // Fetch updated post to get the updated comments list
+      console.log("Fetching post with ID:", post._id);
       const postResponse = await fetch(
-        `http://localhost:3000/posts/${post._id}`
+        `http://localhost:3000/posts/${post._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          }
+        }
       );
       if (postResponse.ok) {
         const updatedPost = await postResponse.json();
@@ -316,7 +322,12 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
 
       // Fetch updated post to get the complete updated data
       const postResponse = await fetch(
-        `http://localhost:3000/posts/${post._id}`
+        `http://localhost:3000/posts/${post._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          }
+        }
       );
       if (postResponse.ok) {
         const updatedPost = await postResponse.json();
