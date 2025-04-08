@@ -65,6 +65,7 @@
   background-color: #ffaa00;
   opacity: 0.4;
   transition-duration: 0s;
+  z-index: 0;
 }
 
 .background-pattern-dark {

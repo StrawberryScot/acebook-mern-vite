@@ -6,6 +6,7 @@ import "./Navbar.css";
 import "../../App.css";
 import images from "../../images";
 import { useSelector } from "react-redux";
+import LogoutButton from "../LogoutButton";
 
 export function Navbar() {
     const user = useSelector((state) => state.user.user);
@@ -25,6 +26,7 @@ export function Navbar() {
                                 className="profile-pic"
                             />
                         </Link>
+                        <LogoutButton />
                     </div>
                 ) : (
                     <Link to="/login" className="button">

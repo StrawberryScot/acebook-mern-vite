@@ -5,7 +5,6 @@ import { getPosts } from "../../services/posts";
 import Post from "../../components/Post";
 import CreatePostForm from "../../components/CreatePostForm";
 import { HivemindLogo } from "../../components/HivemindLogo";
-import LogoutButton from "../../components/LogoutButton";
 
 import { Navbar } from "../../components/navbar/Navbar";
 import "../../App.css";
@@ -41,7 +40,6 @@ export function FeedPage() {
   return (
     <div className="content-container">
       <div className="feed" role="feed">
-        <CreatePostForm onPostCreated={handlePostCreated} />
         {posts.map((post, index) => (
           <div
             className={
@@ -89,8 +87,11 @@ export function FeedPage() {
           </div>
         ))}
       </div>
-      <Navbar />
-      <LogoutButton />
+      <div className="right-5vh">
+        <Navbar />
+        <CreatePostForm onPostCreated={handlePostCreated} />
+
+      </div>
     </div>
   );
 }
