@@ -313,5 +313,55 @@ describe("/users", () => {
       expect(response.body.message).toBe('Friend added successfully');
       expect(coolUser.friends.includes(signedInUser._id.toString()));
     })
+
+    test("check that we get an error if userId does not exist", async () => {
+      //created a user to befriend
+      const coolUser = await User.create({
+        email: "someone@example.com",
+        password: "password",
+        firstName: "John",
+        lastName: "Lastname",
+        profilePicPath: "test-address",
+        status: "Online",
+        backgroundPicPath: "test-back-address",
+        isOnlyFriends: false,
+      });
+      const fakeId = "0000a9c8902d41b7360e9693"
+      //sent a request from signed in user to friend to try and add
+      const response = await request(app)
+      .post(`/users/${coolUser._id.toString()}/friend`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({userSignedIn: fakeId});
+      expect(response.statusCode).toBe(404);
+      expect(response.body.message).toBe('User not found');
+    })
+
+    test("check that we get an error if the userID for a friend we're trying to add does not exist", async () => {
+      const testUserData = {
+        email: "someone@example.com",
+        password: "password",
+        firstName: "Some",
+        lastName: "One",
+        profilePicPath: "test-address",
+        status: "Online",
+        backgroundPicPath: "test-back-address",
+        isOnlyFriends: false,
+      };
+      const signedInUser = new User(testUserData);
+      await signedInUser.save({timeout: 5000});
+      token = createToken(signedInUser._id.toString());
+      //created a user that signed in
+
+      const fakeId = "0000a9c8902d41b7360e9693"
+
+      //sent a request from signed in user to friend to try and add
+      const response = await request(app)
+      .post(`/users/${fakeId}/friend`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({userSignedIn: signedInUser._id.toString()});
+      
+      expect(response.statusCode).toBe(404);
+      expect(response.body.message).toBe('Friend not found');
+    })
   })
 });
