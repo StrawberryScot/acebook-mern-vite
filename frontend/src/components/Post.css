@@ -1,11 +1,9 @@
 .yellow {
-  background-color: #d69723;
-  outline: solid 0.5rem #d48a00;
+  background-color: #d697237e;
   text-align: left;
 }
 .brown {
-  background-color: #392625;
-  outline: solid 0.5rem #2c121e;
+  background-color: #575c0e71;
   text-align: left;
 }
 
@@ -13,12 +11,20 @@
   font-size: 18px;
 }
 
+.post-content {
+  background-color: #ffffffd3;
+  border-left: 3px solid #363636;
+  padding: 10px;
+  border-radius: 5px;
+  color: rgb(0, 0, 0);
+}
+
 .white-text {
-  color: white;
+  color: rgb(255, 255, 255);
   padding: 1rem 2rem;
   margin: 0rem 1rem;
-  border-radius: 3rem;
-  margin-bottom: 40px;
+  border-radius: 12px;
+  margin-bottom: 20px;
   margin-top: 20px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 300;
