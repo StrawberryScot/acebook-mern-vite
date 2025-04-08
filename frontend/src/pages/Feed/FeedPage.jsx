@@ -40,7 +40,6 @@ export function FeedPage() {
 
   return (
     <div className="content-container">
-      <Navbar />
       <div className="feed" role="feed">
         <CreatePostForm onPostCreated={handlePostCreated} />
         {posts.map((post, index) => (
@@ -90,6 +89,7 @@ export function FeedPage() {
           </div>
         ))}
       </div>
+      <Navbar />
       <LogoutButton />
     </div>
   );

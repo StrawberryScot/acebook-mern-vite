@@ -61,12 +61,13 @@
 /* Containers styles */
 .content-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  left: 0px;
   min-height: 100vh;
-  position: relative;
+  position: absolute;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #d69723;
-  overflow: hidden;
+  width: 100vw;
 }
 
 textarea {
