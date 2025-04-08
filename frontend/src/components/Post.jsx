@@ -2,9 +2,10 @@ import { useSelector } from "react-redux";
 import DeletePostForm from "./DeletePostForm";
 import { useEffect, useState } from "react";
 import EditPostForm from "./EditPostForm";
+import LikeButton from "./LikeButton";
 import "./Comments.css";
 
-function Post({ post, onPostDeleted, onPostUpdated }) {
+function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
   // Get the current user from Redux store
   const user = useSelector((state) => state.user.user);
 
@@ -12,6 +13,7 @@ function Post({ post, onPostDeleted, onPostUpdated }) {
   const isAuthor = user && post.postedBy === user._id;
 
   const [posterName, setPosterName] = useState("");
+
   //comments states:
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState([]);
@@ -53,7 +55,6 @@ function Post({ post, onPostDeleted, onPostUpdated }) {
         setPosterName("Unknown User");
       }
     };
-
     fetchPosterName();
   }, [post.postedBy]);
   // fetching comment user names:
@@ -186,6 +187,9 @@ function Post({ post, onPostDeleted, onPostUpdated }) {
         <img src={post.img} alt="Post image" className="post-image" />
       )}
 
+      <div className="post-actions">
+        <LikeButton post={post} onLikeUpdated={onLikeUpdated} />
+      </div>
       {/* Comments section */}
       <div className="comments-section">
         <button
