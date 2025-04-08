@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPost } from "../services/posts";
+import "./CreatePostForm.css"
 
 function CreatePostForm({ onPostCreated }) {
   const [text, setText] = useState("");
