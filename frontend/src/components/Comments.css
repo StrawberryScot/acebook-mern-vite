@@ -3,13 +3,13 @@
 }
 
 .comments-toggle-button {
-  background-color: #f0f2f5;
+  background-color: #ffffffd3;
   border: none;
   border-radius: 4px;
   padding: 8px 12px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
-  color: #4a76a8;
+  color: #313131;
   cursor: pointer;
   width: 100%;
   text-align: left;
@@ -60,7 +60,11 @@
 }
 
 .comment-text {
-  margin: 0;
+  padding: 10px;
+  background-color: #5c5c5cb2;
+  border-left: 3px solid #8a8a8a;
+  margin-top: 8px;
+  border-radius: 5px;
 }
 
 .comment-form {
@@ -81,7 +85,7 @@
 .comment-form button {
   align-self: flex-end;
   padding: 8px 16px;
-  background-color: #4a76a8;
+  background-color: #b4b4b4;
   color: white;
   border: none;
   border-radius: 4px;
@@ -101,14 +105,15 @@
   margin-bottom: 10px;
 }
 
+.replies-toggle-button,
 .reply-button {
-  background: none;
+  background: rgba(56, 56, 56, 0.79);
   border: none;
-  color: #4a76a8;
+  color: #ffffff;
   cursor: pointer;
-  font-size: 13px;
-  text-decoration: underline;
-  padding: 0;
+  font-size: 10px;
+  padding: 5px;
+  border-radius: 5px;
   margin-right: 15px;
 }
 
@@ -121,7 +126,7 @@
 }
 
 .reply-form textarea {
-  width: 100%;
+  width: 96.5%;
   min-height: 60px;
   padding: 8px;
   margin-bottom: 8px;
@@ -142,7 +147,7 @@
 }
 
 .reply-form-buttons button:first-child {
-  background-color: #4a76a8;
+  background-color: #464646a1;
   color: white;
   border: none;
 }
@@ -159,10 +164,10 @@
 
 .reply {
   padding: 10px;
-  background-color: #eef5fd;
-  border-left: 3px solid #4a76a8;
+  background-color: #5c5c5cb2;
+  border-left: 3px solid #8a8a8a;
   margin-top: 8px;
-  border-radius: 0 6px 6px 0;
+  border-radius: 5px;
 }
 
 .reply-header {
@@ -170,27 +175,29 @@
   justify-content: space-between;
   margin-bottom: 5px;
   font-size: 13px;
+  color: #ffffff;
 }
 
 .reply-time {
-  color: #666;
+  color: #ffffff;
   font-size: 11px;
 }
 
 .reply-text {
   margin: 5px 0;
+  color: #ffffff;
 }
 
 .reply-parent {
   font-size: 12px;
-  color: #666;
+  color: #ffffff;
   margin-bottom: 5px;
   font-style: italic;
 }
 
 .parent-user {
   font-weight: bold;
-  color: #4a76a8;
+  color: #d69723;
 }
 
 .highlighted-reply {
@@ -201,7 +208,7 @@
 /* Post date styling */
 .post-date {
   font-size: 0.8rem;
-  color: #666;
+  color: #ffffff;
   margin-bottom: 10px;
 }
 

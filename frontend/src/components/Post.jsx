@@ -25,6 +25,9 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
   const [replyText, setReplyText] = useState("");
   const [parentReplyId, setParentReplyId] = useState(null);
 
+  // Track which comments have visible replies
+  const [visibleReplies, setVisibleReplies] = useState({});
+
   // Updating comments when post prop changes
   useEffect(() => {
     if (post && post.comments) {
@@ -150,6 +153,14 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
     setCommentsVisible(!commentsVisible);
   };
 
+  // Toggle visibility of replies for a specific comment
+  const toggleReplies = (commentId) => {
+    setVisibleReplies((prev) => ({
+      ...prev,
+      [commentId]: !prev[commentId],
+    }));
+  };
+
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
 
@@ -220,6 +231,12 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
     setActiveReplyId(commentId);
     setParentReplyId(replyId);
     setReplyText(replyId ? `@${getUserName(replyId)} ` : "");
+
+    // Automatically show replies when replying
+    setVisibleReplies((prev) => ({
+      ...prev,
+      [commentId]: true,
+    }));
   };
 
   // Cancel reply
@@ -291,6 +308,12 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
         })
       );
 
+      // Ensure replies are visible after adding a new one
+      setVisibleReplies((prev) => ({
+        ...prev,
+        [commentId]: true,
+      }));
+
       // Fetch updated post to get the complete updated data
       const postResponse = await fetch(
         `http://localhost:3000/posts/${post._id}`
@@ -337,7 +360,9 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
         style={{ marginLeft: `${indentLevel * 20}px` }}
       >
         <div className="reply-header">
-          <strong>{replyUserNames[reply.repliedBy] || "Loading..."}</strong>
+          <strong>
+            {replyUserNames[reply.repliedBy] || "Loading..."} replied:{" "}
+          </strong>
           <span className="reply-time">{formatDate(reply.createdAt)}</span>
         </div>
 
@@ -368,7 +393,7 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
     <article className="post" key={post._id}>
       <p className="posterName">{posterName} says:</p>
       <p className="post-date">Posted {formatDate(post.createdAt)}</p>
-      <p>{post.text}</p>
+      <p className="post-content">{post.text}</p>
       {post.img && (
         <img src={post.img} alt="Post image" className="post-image" />
       )}
@@ -398,7 +423,8 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
                   >
                     <div className="comment-header">
                       <strong>
-                        {commentUserNames[comment.commentedBy] || "Loading..."}
+                        {commentUserNames[comment.commentedBy] || "Loading..."}{" "}
+                        commented:
                       </strong>
                       <span className="comment-time">
                         {formatDate(comment.createdAt)}
@@ -407,16 +433,28 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
                     <p className="comment-text">{comment.text}</p>
 
                     {/* Comment actions */}
-                    {user && (
-                      <div className="comment-actions">
+                    <div className="comment-actions">
+                      {user && (
                         <button
                           className="reply-button"
                           onClick={() => handleReplyClick(comment._id)}
                         >
                           Reply
                         </button>
-                      </div>
-                    )}
+                      )}
+
+                      {/* Only show the replies toggle if there are replies */}
+                      {comment.replies && comment.replies.length > 0 && (
+                        <button
+                          className="replies-toggle-button"
+                          onClick={() => toggleReplies(comment._id)}
+                          aria-expanded={visibleReplies[comment._id]}
+                        >
+                          {visibleReplies[comment._id] ? "Hide" : "Show"}{" "}
+                          Replies ({comment.replies.length})
+                        </button>
+                      )}
+                    </div>
 
                     {/* Reply form */}
                     {activeReplyId === comment._id && (
@@ -444,14 +482,16 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
                       </div>
                     )}
 
-                    {/* Replies */}
-                    {comment.replies && comment.replies.length > 0 && (
-                      <div className="replies-container">
-                        {comment.replies.map((reply) =>
-                          renderReply(reply, comment._id)
-                        )}
-                      </div>
-                    )}
+                    {/* Replies - only show if visibleReplies[comment._id] is true */}
+                    {comment.replies &&
+                      comment.replies.length > 0 &&
+                      visibleReplies[comment._id] && (
+                        <div className="replies-container">
+                          {comment.replies.map((reply) =>
+                            renderReply(reply, comment._id)
+                          )}
+                        </div>
+                      )}
                   </div>
                 ))}
               </div>
