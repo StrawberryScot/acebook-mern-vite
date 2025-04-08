@@ -80,11 +80,31 @@ const getNameById = async (req, res) => {
   }
 };
 
+const addFriend = async (req, res) => {
+  //get the ids from the request of person adding, and person to be added
+  //find the users using the ids
+  const {userSignedIn} = req.body;
+  const user = await User.findById(userSignedIn);
+  if (!user) {
+    return res.status(404).json({message: 'User not found'});
+  }
+  
+  const friendToAdd = req.params.id;
+  const friend = await User.findById(friendToAdd);
+  if (!friend){
+    return res.status(404).json({message: 'Friend not found'});
+  }
+
+  friend.friends.push(userSignedIn);
+  await friend.save();
+  return res.status(200).json({message:'Friend added successfully'});
+}
 
 const UsersController = {
   create: create,
   getUserByToken,
   getNameById,
+  addFriend: addFriend
 };
 
 module.exports = UsersController;

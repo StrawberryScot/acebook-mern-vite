@@ -4,7 +4,22 @@ const app = require("../../app");
 const User = require("../../models/user");
 const testUserData = require("../userDataForTest");
 
+const JWT = require("jsonwebtoken");
+const secret = process.env.JWT_SECRET;
+
+
 require("../mongodb_helper");
+
+function createToken(userId) {
+  return JWT.sign(
+    {
+      user_id: userId,
+      iat: Math.floor(Date.now() / 1000) - 5 * 60,
+      exp: Math.floor(Date.now() / 1000) + 10 * 60,
+    },
+    secret
+  );
+}
 
 describe("/users", () => {
   beforeEach(async () => {
@@ -222,4 +237,81 @@ describe("/users", () => {
       expect(response.body.message).toEqual("User does NOT exist!");
     });
   });
+
+  describe("POST, add user to a user's list of friends", ()=> {
+    test("response code is 200", async ()=> {
+      const testUserData = {
+        email: "someone@example.com",
+        password: "password",
+        firstName: "Some",
+        lastName: "One",
+        profilePicPath: "test-address",
+        status: "Online",
+        backgroundPicPath: "test-back-address",
+        isOnlyFriends: false,
+      };
+      const signedInUser = new User(testUserData);
+      await signedInUser.save({timeout: 5000});
+      token = createToken(signedInUser._id.toString());
+      //created a user that signed in
+
+      //created a user to befriend
+      const coolUser = await User.create({
+        email: "someone@example.com",
+        password: "password",
+        firstName: "John",
+        lastName: "Lastname",
+        profilePicPath: "test-address",
+        status: "Online",
+        backgroundPicPath: "test-back-address",
+        isOnlyFriends: false,
+      });
+
+      //sent a request from signed in user to friend to try and add
+      const response = await request(app)
+      .post(`/users/${coolUser._id.toString()}/friend`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({userSignedIn: signedInUser._id.toString()});
+      expect(response.statusCode).toBe(200);
+      expect(response.body.message).toBe('Friend added successfully');
+    })
+
+    test("userId added to list of friends to person we sent friends request to", async ()=> {
+      const testUserData = {
+        email: "someone@example.com",
+        password: "password",
+        firstName: "Some",
+        lastName: "One",
+        profilePicPath: "test-address",
+        status: "Online",
+        backgroundPicPath: "test-back-address",
+        isOnlyFriends: false,
+      };
+      const signedInUser = new User(testUserData);
+      await signedInUser.save({timeout: 5000});
+      token = createToken(signedInUser._id.toString());
+      //created a user that signed in
+
+      //created a user to befriend
+      const coolUser = await User.create({
+        email: "someone@example.com",
+        password: "password",
+        firstName: "John",
+        lastName: "Lastname",
+        profilePicPath: "test-address",
+        status: "Online",
+        backgroundPicPath: "test-back-address",
+        isOnlyFriends: false,
+      });
+
+      //sent a request from signed in user to friend to try and add
+      const response = await request(app)
+      .post(`/users/${coolUser._id.toString()}/friend`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({userSignedIn: signedInUser._id.toString()});
+      expect(response.statusCode).toBe(200);
+      expect(response.body.message).toBe('Friend added successfully');
+      expect(coolUser.friends.includes(signedInUser._id.toString()));
+    })
+  })
 });
