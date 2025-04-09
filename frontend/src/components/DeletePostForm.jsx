@@ -39,7 +39,7 @@ function DeletePostForm({ post, onPostDeleted }) {
         className="delete-button"
         aria-label="Delete post"
       >
-        🗑️
+        <i class="fa-solid fa-trash fa-beat"></i>
       </button>
 
       {showConfirm && (

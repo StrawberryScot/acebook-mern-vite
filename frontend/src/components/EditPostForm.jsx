@@ -48,7 +48,7 @@ function EditPostForm({ post, onPostUpdated }) {
           className="edit-button"
           aria-label="Edit post"
         >
-          ✏️
+          <i class="fa-solid fa-pen fa-beat"></i>
         </button>
       ) : (
         <div className="edit-form">

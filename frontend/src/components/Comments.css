@@ -3,7 +3,7 @@
 .post-header {
   display: flex;
   flex-direction: row-reverse; /* Reverses the order: pic on right, name on left */
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
 }
