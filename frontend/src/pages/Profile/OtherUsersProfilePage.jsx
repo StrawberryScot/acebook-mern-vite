@@ -19,6 +19,7 @@ export const UserProfilePage = () => {
       setLoading(true);
       try {
         const profileData = await getUserProfileById(token, userId);
+        console.log(profileData);
         setUserProfile(profileData);
         setError(null);
       } catch (err) {
@@ -93,6 +94,8 @@ export const UserProfilePage = () => {
       </div>
     );
   }
+
+  console.log(userProfile);
 
   return (
     <div className="content-container">

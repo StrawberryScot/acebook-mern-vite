@@ -1,11 +1,29 @@
 import { useSelector } from "react-redux";
 import DeletePostForm from "./DeletePostForm";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import EditPostForm from "./EditPostForm";
 import LikeButton from "./LikeButton";
 import "./Comments.css";
 
 function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
+  const navigate = useNavigate();
+  const handleViewAnotherUsersProfile = () => {
+    if (!user || !post.postedBy) {
+      console.log("Missing user info for navigation");
+      return;
+    }
+    const postAuthorId =
+      typeof post.postedBy === "object" ? post.postedBy._id : post.postedBy;
+    // Check if this is the current user's post
+    if (user._id === postAuthorId) {
+      navigate("/profile");
+    } else {
+      // Navigate to the other user's profile if not logged in users post
+      navigate(`/profile/${postAuthorId}`);
+    }
+  };
+
   // Get the current user from Redux store
   const user = useSelector((state) => state.user.user);
 
@@ -366,7 +384,7 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
-          }
+          },
         }
       );
       if (postResponse.ok) {
@@ -384,17 +402,27 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
   };
 
   // Handle showing reply form
-  const handleReplyClick = (commentId, replyId = null, repliedByUserId = null) => {
+  const handleReplyClick = (
+    commentId,
+    replyId = null,
+    repliedByUserId = null
+  ) => {
     setActiveReplyId(commentId);
     setParentReplyId(replyId);
     setReplyingToUserId(repliedByUserId);
 
-    // Get the user name based on user ID 
+    // Get the user name based on user ID
     let replyToName = "User";
     if (repliedByUserId) {
-      if (replyUserNames[repliedByUserId] && replyUserNames[repliedByUserId].name) {
+      if (
+        replyUserNames[repliedByUserId] &&
+        replyUserNames[repliedByUserId].name
+      ) {
         replyToName = replyUserNames[repliedByUserId].name.split(" ")[0]; // Just use the first name
-      } else if (commentUserNames[repliedByUserId] && commentUserNames[repliedByUserId].name) {
+      } else if (
+        commentUserNames[repliedByUserId] &&
+        commentUserNames[repliedByUserId].name
+      ) {
         replyToName = commentUserNames[repliedByUserId].name.split(" ")[0];
       }
       setReplyText(`@${replyToName} `);
@@ -523,7 +551,7 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
-          }
+          },
         }
       );
       if (postResponse.ok) {
@@ -560,7 +588,8 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
   // Render a reply component with proper indentation and highlighting
   const renderReply = (reply, commentId, indentLevel = 0) => {
     const isParentReply = parentReplyId === reply._id;
-    const isActiveReply = activeReplyId === commentId && parentReplyId === reply._id;
+    const isActiveReply =
+      activeReplyId === commentId && parentReplyId === reply._id;
     const replyUserName = replyUserNames[reply.repliedBy]?.name || "Loading...";
     const replyProfilePic =
       replyUserNames[reply.repliedBy]?.profilePicture || DEFAULT_PROFILE_PIC;
@@ -595,7 +624,9 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
         {user && (
           <button
             className="reply-button"
-            onClick={() => handleReplyClick(commentId, reply._id, reply.repliedBy)}
+            onClick={() =>
+              handleReplyClick(commentId, reply._id, reply.repliedBy)
+            }
           >
             Reply
           </button>
@@ -633,6 +664,7 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
           src={posterProfilePic || DEFAULT_PROFILE_PIC}
           alt="Profile"
           className="profile-picture"
+          onClick={handleViewAnotherUsersProfile}
           onError={(e) => {
             console.log("Image error, using default");
             e.target.src = DEFAULT_PROFILE_PIC;
@@ -704,7 +736,13 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
                         {user && (
                           <button
                             className="reply-button"
-                            onClick={() => handleReplyClick(comment._id, null, comment.commentedBy)}
+                            onClick={() =>
+                              handleReplyClick(
+                                comment._id,
+                                null,
+                                comment.commentedBy
+                              )
+                            }
                           >
                             Reply
                           </button>

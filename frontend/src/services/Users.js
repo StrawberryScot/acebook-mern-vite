@@ -9,7 +9,7 @@ export async function getUserProfileById(token, userId) {
   };
 
   const response = await fetch(
-    `${BACKEND_URL}/users/${userId}/profile`,
+    `${BACKEND_URL}/users/${userId}/completeProfile`,
     requestOptions
   );
 
