@@ -107,6 +107,40 @@ export async function likeUnlikePost(token, postId) {
   return data;
 }
 
+export async function getUserPosts(token) {
+  try {
+    const userId = extractUserIdFromToken(token);
+
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    console.log("Fetching from:", `${BACKEND_URL}/posts/user/${userId}`);
+
+    const response = await fetch(
+      `${BACKEND_URL}/posts/user/${userId}`,
+      requestOptions
+    );
+
+    if (response.status !== 200) {
+      const errorText = await response.text();
+      console.error("Error response:", errorText);
+      throw new Error(
+        `Unable to fetch user posts: ${response.status} - ${errorText}`
+      );
+    }
+
+    const data = await response.json();
+    return data.posts;
+  } catch (error) {
+    console.error("getUserPosts error:", error);
+    throw error;
+  }
+}
+
 // Simple function to extract user ID from token
 function extractUserIdFromToken(token) {
   try {

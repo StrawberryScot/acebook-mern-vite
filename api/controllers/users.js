@@ -57,13 +57,13 @@ const getUserByToken = async (req, res) => {
 const getNameById = async (req, res) => {
   const userId = req.params.id;
   
-  console.log("Incoming user ID param:", req.params.id);
+  // console.log("Incoming user ID param:", req.params.id);
 
   if (!userId || userId.length !== 24) {
     return res.status(400).json({ message: "Invalid user ID format" });
   }
 
-  console.log(`THIS IS THE USER ID: ${userId}`);
+  // console.log(`THIS IS THE USER ID: ${userId}`);
 
   try {
     const user = await User.findById(userId).select("firstName lastName");
@@ -79,6 +79,7 @@ const getNameById = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 const getUserProfileById = async (req, res) => {
   try {
@@ -102,11 +103,39 @@ const getUserProfileById = async (req, res) => {
   }
   } 
 
+const addFriend = async (req, res) => {
+  //get the ids from the request of person adding, and person to be added
+  //find the users using the ids
+  try {
+    const {userSignedIn} = req.body;
+    const user = await User.findById(userSignedIn);
+    if (!user) {
+      return res.status(404).json({message: 'User not found'});
+    }
+    
+    const friendToAdd = req.params.id;
+    const friend = await User.findById(friendToAdd);
+    if (!friend){
+      return res.status(404).json({message: 'Friend not found'});
+    }
+
+    friend.friends.push(userSignedIn);
+    await friend.save();
+    return res.status(200).json({message:'Friend added successfully'});
+  }
+  catch (error){
+    console.error('addFriend function has an error: ', error);
+    return res.status(500).json({message: 'Error adding a friend'});
+  }
+}
+
+
 const UsersController = {
   create,
   getUserByToken,
   getNameById,
   getUserProfileById,
+  addFriend: addFriend,
 };
 
 module.exports = UsersController;
