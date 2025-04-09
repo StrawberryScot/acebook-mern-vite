@@ -10,6 +10,7 @@ import { LoginPage } from "./pages/Login/LoginPage";
 import { SignupPage } from "./pages/Signup/SignupPage";
 import { FeedPage } from "./pages/Feed/FeedPage";
 import { ProfilePage } from "./pages/Profile/ProfilePage";
+import { UserProfilePage } from "./pages/Profile/OtherUsersProfilePage";
 import HexagonBackground from "./components/HexagonBackground";
 
 // docs: https://reactrouter.com/en/main/start/overview
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
   {
     path: "/profile",
     element: <ProfilePage />,
+  },
+  {
+    path: "/profile/:userId",
+    element: <UserProfilePage />,
   },
 ]);
 
