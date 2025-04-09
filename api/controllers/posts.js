@@ -224,6 +224,18 @@ async function replyToComment(req, res) {
   }
 }
 
+async function getPostById (req, res) {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    res.status(200).json(post);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching post", error: error.message });
+  }
+};
+
 const PostsController = {
   getAllPosts: getAllPosts,
   getUserPosts: getUserPosts,
@@ -233,6 +245,7 @@ const PostsController = {
   likeUnlikePost: likeUnlikePost,
   commentToPost: commentToPost,
   replyToComment: replyToComment,
+  getPostById
 };
 
 module.exports = PostsController;

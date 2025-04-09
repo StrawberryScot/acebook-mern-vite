@@ -1,4 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { getUserByToken } from "./services/authentication";
+import { setUser, clearUser } from "./redux/userSlice";
 
 import "./App.css";
 import { HomePage } from "./pages/Home/HomePage";
@@ -33,6 +37,23 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const dispatch = useDispatch(); // for persisting login
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      getUserByToken(token)
+        .then((user) => {
+          dispatch(setUser(user));
+        })
+        .catch((err) => {
+          console.error("Failed to restore user from token:", err);
+          localStorage.removeItem("token");
+          dispatch(clearUser());
+        });
+    }
+  }, [dispatch]);
+
   return (
     <>
       <RouterProvider router={router} />
