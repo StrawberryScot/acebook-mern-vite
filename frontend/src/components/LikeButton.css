@@ -6,6 +6,8 @@
   margin-bottom: 10px;
 }
 
+.edit-button,
+.delete-button,
 .like-button {
   display: flex;
   align-items: center;
@@ -19,6 +21,8 @@
   transition: all 0.2s ease;
 }
 
+.edit-button:hover,
+.delete-button:hover,
 .like-button:hover {
   background-color: #f0f2f5;
 }

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import EditPostForm from "./EditPostForm";
 import LikeButton from "./LikeButton";
 import "./Comments.css";
+import "./Post.css";
 
 function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
   const navigate = useNavigate();
@@ -671,9 +672,11 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
             e.target.src = DEFAULT_PROFILE_PIC;
           }}
         />
-        <div className="post-author-info">
-          <strong className="posterName">{posterName} says:</strong>
-          <p className="post-date">Posted {formatDate(post.createdAt)}</p>
+        <div className="post-subheader">
+          <div className="post-author-info">
+            <strong className="posterName">{posterName} says:</strong>
+            <p className="post-date">Posted {formatDate(post.createdAt)}</p>
+          </div>
         </div>
       </div>
 
@@ -684,6 +687,12 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
 
       <div className="post-actions">
         <LikeButton post={post} onLikeUpdated={onLikeUpdated} />
+        {isAuthor && (
+          <div className="edit-delete-buttons">
+            <EditPostForm post={post} onPostUpdated={onPostUpdated} />
+            <DeletePostForm post={post} onPostDeleted={onPostDeleted} />
+          </div>
+        )}
       </div>
 
       {/* Comments section */}
@@ -829,13 +838,6 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
           </>
         )}
       </div>
-
-      {isAuthor && (
-        <div className="post-delete-footer">
-          <EditPostForm post={post} onPostUpdated={onPostUpdated} />
-          <DeletePostForm post={post} onPostDeleted={onPostDeleted} />
-        </div>
-      )}
     </article>
   );
 }
