@@ -1,11 +1,29 @@
 import { useSelector } from "react-redux";
 import DeletePostForm from "./DeletePostForm";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import EditPostForm from "./EditPostForm";
 import LikeButton from "./LikeButton";
 import "./Comments.css";
 
 function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
+  const navigate = useNavigate();
+  const handleViewAnotherUsersProfile = () => {
+    if (!user || !post.postedBy) {
+      console.log("Missing user info for navigation");
+      return;
+    }
+    const postAuthorId =
+      typeof post.postedBy === "object" ? post.postedBy._id : post.postedBy;
+    // Check if this is the current user's post
+    if (user._id === postAuthorId) {
+      navigate("/profile");
+    } else {
+      // Navigate to the other user's profile if not logged in users post
+      navigate(`/profile/${postAuthorId}`);
+    }
+  };
+
   // Get the current user from Redux store
   const user = useSelector((state) => state.user.user);
 
@@ -647,6 +665,7 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
           src={posterProfilePic || DEFAULT_PROFILE_PIC}
           alt="Profile"
           className="profile-picture"
+          onClick={handleViewAnotherUsersProfile}
           onError={(e) => {
             console.log("Image error, using default");
             e.target.src = DEFAULT_PROFILE_PIC;
