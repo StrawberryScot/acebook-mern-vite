@@ -20,3 +20,50 @@ export async function getUserProfileById(token, userId) {
   const data = await response.json();
   return data;
 }
+
+export async function addFriend(token, friendUserId) {
+  if (!friendUserId) {
+    throw new Error("friendUserId is required");
+  }
+
+  const userSignedIn = await extractUserIdFromToken(token);
+  console.log(userSignedIn);
+
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ userSignedIn }),
+    
+  };
+
+  const response = await fetch(`${BACKEND_URL}/users/${friendUserId}/friend`,
+    requestOptions
+  );
+  
+  if (response.status !== 200) {
+    throw new Error("Unable to add friend");
+  }
+
+  const data = await response.json();
+  return data;
+}
+
+//get user from token
+// Simple function to extract user ID from token
+function extractUserIdFromToken(token) {
+  try {
+    // Split the token and get the payload (middle part)
+    const payload = token.split(".")[1];
+    // Decode the base64 payload
+    const decodedPayload = JSON.parse(atob(payload));
+    // Return the user_id from the payload
+    return decodedPayload.user_id;
+  } catch (error) {
+    console.error("Error extracting user ID from token:", error);
+    return null;
+  }
+}
+
