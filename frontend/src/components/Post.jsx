@@ -12,7 +12,8 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
   // Check if the current user is the author of the post
   const isAuthor = user && post.postedBy === user._id;
 
-  const [posterName, setPosterName] = useState("");
+  const [posterName, setPosterName] = useState("Loading...");
+  const [posterProfilePic, setPosterProfilePic] = useState("");
 
   // Comments states:
   const [commentText, setCommentText] = useState("");
@@ -24,9 +25,20 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
   const [activeReplyId, setActiveReplyId] = useState(null);
   const [replyText, setReplyText] = useState("");
   const [parentReplyId, setParentReplyId] = useState(null);
+  // New state to track the user ID of the reply we're responding to
+  const [replyingToUserId, setReplyingToUserId] = useState(null);
 
   // Track which comments have visible replies
   const [visibleReplies, setVisibleReplies] = useState({});
+
+  // Default profile picture path
+  const DEFAULT_PROFILE_PIC =
+    "https://i.pinimg.com/564x/1b/b0/e8/1bb0e8072b1289f1acd6b80cfc941e59.jpg";
+
+  // Debug logging function - add this to help diagnose issues
+  const debugLog = (message, data) => {
+    console.log(`DEBUG - ${message}:`, data);
+  };
 
   // Updating comments when post prop changes
   useEffect(() => {
@@ -36,10 +48,11 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
   }, [post]);
 
   useEffect(() => {
-    const fetchPosterName = async () => {
+    const fetchPosterInfo = async () => {
       try {
         if (!post.postedBy) {
           setPosterName("Unknown User");
+          setPosterProfilePic(DEFAULT_PROFILE_PIC);
           return;
         }
 
@@ -48,109 +61,227 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
             ? post.postedBy._id || post.postedBy.toString()
             : post.postedBy.toString();
 
-        const response = await fetch(
-          `http://localhost:3000/users/${postedById}/name`
+        // Log the ID we're using to fetch the profile
+        debugLog("Fetching poster info with ID", postedById);
+
+        // Try the /profile endpoint first
+        let response = await fetch(
+          `http://localhost:3000/users/${postedById}/profile`
         );
 
+        // If /profile fails, fall back to /name
         if (!response.ok) {
-          throw new Error("Failed to fetch user name");
+          console.warn(
+            "Failed to fetch profile data, trying name endpoint instead"
+          );
+          response = await fetch(
+            `http://localhost:3000/users/${postedById}/name`
+          );
         }
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch user profile");
+        }
+
         const data = await response.json();
-        setPosterName(`${data.firstName} ${data.lastName}`);
+        debugLog("Poster data received", data);
+
+        // Check what fields we actually get back from the API
+        if (data) {
+          // Set the name based on what's available
+          if (data.firstName && data.lastName) {
+            setPosterName(`${data.firstName} ${data.lastName}`);
+          } else if (data.name) {
+            setPosterName(data.name);
+          } else if (data.username) {
+            setPosterName(data.username);
+          } else {
+            setPosterName("User");
+          }
+
+          // Set profile pic if available
+          setPosterProfilePic(
+            data.profilePicPath ||
+              data.profilePic ||
+              data.avatar ||
+              DEFAULT_PROFILE_PIC
+          );
+        } else {
+          throw new Error("No user data received");
+        }
       } catch (error) {
-        console.error("Error fetching poster name:", error);
+        console.error("Error fetching poster info:", error);
         setPosterName("Unknown User");
+        setPosterProfilePic(DEFAULT_PROFILE_PIC);
       }
     };
 
-    fetchPosterName();
+    fetchPosterInfo();
   }, [post.postedBy]);
 
   // Fetching comment and reply user names
   useEffect(() => {
-    const fetchUserNames = async () => {
-      // Fetch comment user names
+    const fetchUserNamesAndProfilePics = async () => {
+      // Fetch comment user names and profile pictures
       for (const comment of comments) {
         if (!comment.commentedBy) continue;
 
-        if (!commentUserNames[comment.commentedBy]) {
-          try {
-            const commenterId =
-              typeof comment.commentedBy === "object"
-                ? comment.commentedBy._id || comment.commentedBy.toString()
-                : comment.commentedBy.toString();
+        try {
+          const commenterId =
+            typeof comment.commentedBy === "object"
+              ? comment.commentedBy._id || comment.commentedBy.toString()
+              : comment.commentedBy.toString();
 
-            const response = await fetch(
+          debugLog("Fetching commenter info with ID", commenterId);
+
+          // Try the /profile endpoint first
+          let response = await fetch(
+            `http://localhost:3000/users/${commenterId}/profile`
+          );
+
+          // If that fails, try the /name endpoint as fallback
+          if (!response.ok) {
+            response = await fetch(
               `http://localhost:3000/users/${commenterId}/name`
             );
-            if (response.ok) {
-              const data = await response.json();
-              setCommentUserNames((prev) => ({
-                ...prev,
-                [comment.commentedBy]: `${data.firstName} ${data.lastName}`,
-              }));
-            } else {
-              setCommentUserNames((prev) => ({
-                ...prev,
-                [comment.commentedBy]: "Unknown User",
-              }));
+          }
+
+          if (response.ok) {
+            const data = await response.json();
+            debugLog("Comment user data received", data);
+
+            let userName = "User";
+            if (data.firstName && data.lastName) {
+              userName = `${data.firstName} ${data.lastName}`;
+            } else if (data.name) {
+              userName = data.name;
+            } else if (data.username) {
+              userName = data.username;
             }
-          } catch (error) {
-            console.error("Error fetching commenter name:", error);
+
             setCommentUserNames((prev) => ({
               ...prev,
-              [comment.commentedBy]: "Unknown User",
+              [comment.commentedBy]: {
+                name: userName,
+                profilePicture:
+                  data.profilePicPath ||
+                  data.profilePic ||
+                  data.avatar ||
+                  DEFAULT_PROFILE_PIC,
+              },
+            }));
+          } else {
+            console.warn(
+              `Failed to fetch information for commenter ID: ${commenterId}`
+            );
+            setCommentUserNames((prev) => ({
+              ...prev,
+              [comment.commentedBy]: {
+                name: "User",
+                profilePicture: DEFAULT_PROFILE_PIC,
+              },
             }));
           }
+        } catch (error) {
+          console.error("Error fetching commenter data:", error);
+          setCommentUserNames((prev) => ({
+            ...prev,
+            [comment.commentedBy]: {
+              name: "User",
+              profilePicture: DEFAULT_PROFILE_PIC,
+            },
+          }));
         }
 
-        // Fetch reply user names if this comment has replies
+        // Fetch replies' user names and profile pictures if this comment has replies
         if (comment.replies && comment.replies.length > 0) {
           for (const reply of comment.replies) {
             if (!reply.repliedBy) continue;
 
-            if (!replyUserNames[reply.repliedBy]) {
-              try {
-                const replierId =
-                  typeof reply.repliedBy === "object"
-                    ? reply.repliedBy._id || reply.repliedBy.toString()
-                    : reply.repliedBy.toString();
+            try {
+              const replierId =
+                typeof reply.repliedBy === "object"
+                  ? reply.repliedBy._id || reply.repliedBy.toString()
+                  : reply.repliedBy.toString();
 
-                const response = await fetch(
+              debugLog("Fetching replier info with ID", replierId);
+
+              // Try the /profile endpoint first
+              let response = await fetch(
+                `http://localhost:3000/users/${replierId}/profile`
+              );
+
+              // If that fails, try the /name endpoint as fallback
+              if (!response.ok) {
+                response = await fetch(
                   `http://localhost:3000/users/${replierId}/name`
                 );
-                if (response.ok) {
-                  const data = await response.json();
-                  setReplyUserNames((prev) => ({
-                    ...prev,
-                    [reply.repliedBy]: `${data.firstName} ${data.lastName}`,
-                  }));
-                } else {
-                  setReplyUserNames((prev) => ({
-                    ...prev,
-                    [reply.repliedBy]: "Unknown User",
-                  }));
+              }
+
+              if (response.ok) {
+                const data = await response.json();
+                debugLog("Reply user data received", data);
+
+                let userName = "User";
+                if (data.firstName && data.lastName) {
+                  userName = `${data.firstName} ${data.lastName}`;
+                } else if (data.name) {
+                  userName = data.name;
+                } else if (data.username) {
+                  userName = data.username;
                 }
-              } catch (error) {
-                console.error("Error fetching replier name:", error);
+
                 setReplyUserNames((prev) => ({
                   ...prev,
-                  [reply.repliedBy]: "Unknown User",
+                  [reply.repliedBy]: {
+                    name: userName,
+                    profilePicture:
+                      data.profilePicPath ||
+                      data.profilePic ||
+                      data.avatar ||
+                      DEFAULT_PROFILE_PIC,
+                  },
+                }));
+              } else {
+                console.warn(
+                  `Failed to fetch information for replier ID: ${replierId}`
+                );
+                setReplyUserNames((prev) => ({
+                  ...prev,
+                  [reply.repliedBy]: {
+                    name: "User",
+                    profilePicture: DEFAULT_PROFILE_PIC,
+                  },
                 }));
               }
+            } catch (error) {
+              console.error("Error fetching replier data:", error);
+              setReplyUserNames((prev) => ({
+                ...prev,
+                [reply.repliedBy]: {
+                  name: "User",
+                  profilePicture: DEFAULT_PROFILE_PIC,
+                },
+              }));
             }
           }
         }
       }
     };
 
+    // Run the fetchUserNamesAndProfilePics function when comments are available and visible
     if (comments.length > 0 && commentsVisible) {
-      fetchUserNames();
+      fetchUserNamesAndProfilePics();
     }
   }, [comments, commentsVisible]);
 
   const toggleComments = () => {
     setCommentsVisible(!commentsVisible);
+
+    // If we're showing comments and there are comments to show, make sure we fetch user data
+    if (!commentsVisible && comments.length > 0) {
+      // This will trigger the useEffect that fetches user names and profile pics
+    }
   };
 
   // Toggle visibility of replies for a specific comment
@@ -206,6 +337,26 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
         };
 
         setComments((prevComments) => [...prevComments, newComment]);
+
+        // Add the current user to commentUserNames if not already present
+        if (!commentUserNames[user._id]) {
+          const currentUserName =
+            user.firstName && user.lastName
+              ? `${user.firstName} ${user.lastName}`
+              : user.username || "Current User";
+
+          setCommentUserNames((prev) => ({
+            ...prev,
+            [user._id]: {
+              name: currentUserName,
+              profilePicture:
+                user.profilePicPath ||
+                user.profilePic ||
+                user.avatar ||
+                DEFAULT_PROFILE_PIC,
+            },
+          }));
+        }
       }
 
       // Fetch updated post to get the updated comments list
@@ -227,10 +378,23 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
   };
 
   // Handle showing reply form
-  const handleReplyClick = (commentId, replyId = null) => {
+  const handleReplyClick = (commentId, replyId = null, repliedByUserId = null) => {
     setActiveReplyId(commentId);
     setParentReplyId(replyId);
-    setReplyText(replyId ? `@${getUserName(replyId)} ` : "");
+    setReplyingToUserId(repliedByUserId);
+
+    // Get the user name based on user ID 
+    let replyToName = "User";
+    if (repliedByUserId) {
+      if (replyUserNames[repliedByUserId] && replyUserNames[repliedByUserId].name) {
+        replyToName = replyUserNames[repliedByUserId].name.split(" ")[0]; // Just use the first name
+      } else if (commentUserNames[repliedByUserId] && commentUserNames[repliedByUserId].name) {
+        replyToName = commentUserNames[repliedByUserId].name.split(" ")[0];
+      }
+      setReplyText(`@${replyToName} `);
+    } else {
+      setReplyText("");
+    }
 
     // Automatically show replies when replying
     setVisibleReplies((prev) => ({
@@ -243,14 +407,26 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
   const cancelReply = () => {
     setActiveReplyId(null);
     setParentReplyId(null);
+    setReplyingToUserId(null);
     setReplyText("");
   };
 
   // Helper function to get user name based on ID from our state
   const getUserName = (id) => {
-    if (replyUserNames[id]) return replyUserNames[id];
-    if (commentUserNames[id]) return commentUserNames[id];
-    return "Unknown User";
+    if (replyUserNames[id] && replyUserNames[id].name)
+      return replyUserNames[id].name;
+    if (commentUserNames[id] && commentUserNames[id].name)
+      return commentUserNames[id].name;
+    return "User";
+  };
+
+  // Get profile picture URL based on user ID
+  const getProfilePicture = (id) => {
+    if (replyUserNames[id] && replyUserNames[id].profilePicture)
+      return replyUserNames[id].profilePicture;
+    if (commentUserNames[id] && commentUserNames[id].profilePicture)
+      return commentUserNames[id].profilePicture;
+    return DEFAULT_PROFILE_PIC;
   };
 
   // Handle submitting a reply
@@ -285,6 +461,27 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
       setReplyText("");
       setActiveReplyId(null);
       setParentReplyId(null);
+      setReplyingToUserId(null);
+
+      // Add current user to replyUserNames if not already present
+      if (!replyUserNames[user._id]) {
+        const currentUserName =
+          user.firstName && user.lastName
+            ? `${user.firstName} ${user.lastName}`
+            : user.username || "Current User";
+
+        setReplyUserNames((prev) => ({
+          ...prev,
+          [user._id]: {
+            name: currentUserName,
+            profilePicture:
+              user.profilePicPath ||
+              user.profilePic ||
+              user.avatar ||
+              DEFAULT_PROFILE_PIC,
+          },
+        }));
+      }
 
       // Update local comments with the new reply
       setComments((prevComments) =>
@@ -352,6 +549,10 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
   // Render a reply component with proper indentation and highlighting
   const renderReply = (reply, commentId, indentLevel = 0) => {
     const isParentReply = parentReplyId === reply._id;
+    const isActiveReply = activeReplyId === commentId && parentReplyId === reply._id;
+    const replyUserName = replyUserNames[reply.repliedBy]?.name || "Loading...";
+    const replyProfilePic =
+      replyUserNames[reply.repliedBy]?.profilePicture || DEFAULT_PROFILE_PIC;
 
     return (
       <div
@@ -360,9 +561,12 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
         style={{ marginLeft: `${indentLevel * 20}px` }}
       >
         <div className="reply-header">
-          <strong>
-            {replyUserNames[reply.repliedBy] || "Loading..."} replied:{" "}
-          </strong>
+          <img
+            src={replyProfilePic}
+            alt="Profile"
+            className="profile-picture-small"
+          />
+          <strong>{replyUserName} replied: </strong>
           <span className="reply-time">{formatDate(reply.createdAt)}</span>
         </div>
 
@@ -380,10 +584,32 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
         {user && (
           <button
             className="reply-button"
-            onClick={() => handleReplyClick(commentId, reply.repliedBy)}
+            onClick={() => handleReplyClick(commentId, reply._id, reply.repliedBy)}
           >
             Reply
           </button>
+        )}
+        {/* Add the reply form directly below this reply if it's active */}
+        {isActiveReply && (
+          <div className="reply-form">
+            <textarea
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+              placeholder="Write a reply..."
+              required
+            />
+            <div className="reply-form-buttons">
+              <button
+                onClick={() => handleReplySubmit(commentId)}
+                disabled={isSubmitting || !replyText.trim()}
+              >
+                {isSubmitting ? "Posting..." : "Post Reply"}
+              </button>
+              <button className="cancel-button" onClick={cancelReply}>
+                Cancel
+              </button>
+            </div>
+          </div>
         )}
       </div>
     );
@@ -391,8 +617,22 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
 
   return (
     <article className="post" key={post._id}>
-      <p className="posterName">{posterName} says:</p>
-      <p className="post-date">Posted {formatDate(post.createdAt)}</p>
+      <div className="post-header">
+        <img
+          src={posterProfilePic || DEFAULT_PROFILE_PIC}
+          alt="Profile"
+          className="profile-picture"
+          onError={(e) => {
+            console.log("Image error, using default");
+            e.target.src = DEFAULT_PROFILE_PIC;
+          }}
+        />
+        <div className="post-author-info">
+          <strong className="posterName">{posterName} says:</strong>
+          <p className="post-date">Posted {formatDate(post.createdAt)}</p>
+        </div>
+      </div>
+
       <p className="post-content">{post.text}</p>
       {post.img && (
         <img src={post.img} alt="Post image" className="post-image" />
@@ -416,84 +656,102 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
           <>
             {comments.length > 0 ? (
               <div className="comments-list">
-                {comments.map((comment) => (
-                  <div
-                    key={comment._id || `temp-${comment.createdAt}`}
-                    className="comment"
-                  >
-                    <div className="comment-header">
-                      <strong>
-                        {commentUserNames[comment.commentedBy] || "Loading..."}{" "}
-                        commented:
-                      </strong>
-                      <span className="comment-time">
-                        {formatDate(comment.createdAt)}
-                      </span>
-                    </div>
-                    <p className="comment-text">{comment.text}</p>
+                {comments.map((comment) => {
+                  const commentUserName =
+                    commentUserNames[comment.commentedBy]?.name || "Loading...";
+                  const commentProfilePic =
+                    commentUserNames[comment.commentedBy]?.profilePicture ||
+                    DEFAULT_PROFILE_PIC;
 
-                    {/* Comment actions */}
-                    <div className="comment-actions">
-                      {user && (
-                        <button
-                          className="reply-button"
-                          onClick={() => handleReplyClick(comment._id)}
-                        >
-                          Reply
-                        </button>
-                      )}
-
-                      {/* Only show the replies toggle if there are replies */}
-                      {comment.replies && comment.replies.length > 0 && (
-                        <button
-                          className="replies-toggle-button"
-                          onClick={() => toggleReplies(comment._id)}
-                          aria-expanded={visibleReplies[comment._id]}
-                        >
-                          {visibleReplies[comment._id] ? "Hide" : "Show"}{" "}
-                          Replies ({comment.replies.length})
-                        </button>
-                      )}
-                    </div>
-
-                    {/* Reply form */}
-                    {activeReplyId === comment._id && (
-                      <div className="reply-form">
-                        <textarea
-                          value={replyText}
-                          onChange={(e) => setReplyText(e.target.value)}
-                          placeholder="Write a reply..."
-                          required
+                  return (
+                    <div
+                      key={comment._id || `temp-${comment.createdAt}`}
+                      className="comment"
+                    >
+                      <div className="comment-header">
+                        <img
+                          src={commentProfilePic}
+                          alt="Profile"
+                          className="profile-picture"
+                          onError={(e) => {
+                            console.log("Comment image error, using default");
+                            e.target.src = DEFAULT_PROFILE_PIC;
+                          }}
                         />
-                        <div className="reply-form-buttons">
-                          <button
-                            onClick={() => handleReplySubmit(comment._id)}
-                            disabled={isSubmitting || !replyText.trim()}
-                          >
-                            {isSubmitting ? "Posting..." : "Post Reply"}
-                          </button>
-                          <button
-                            className="cancel-button"
-                            onClick={cancelReply}
-                          >
-                            Cancel
-                          </button>
+                        <div className="comment-user-info">
+                          <strong>{commentUserName} commented:</strong>
+                          <span className="comment-time">
+                            {formatDate(comment.createdAt)}
+                          </span>
                         </div>
                       </div>
-                    )}
 
-                    {/* Replies - only show if visibleReplies[comment._id] is true */}
-                    {comment.replies &&
-                      comment.replies.length > 0 &&
-                      visibleReplies[comment._id] && (
-                        <div className="replies-container">
-                          {comment.replies.map((reply) =>
-                            renderReply(reply, comment._id)
-                          )}
-                        </div>
-                      )}
-                  </div>
-                ))}
+                      <p className="comment-text">{comment.text}</p>
+
+                      {/* Comment actions */}
+                      <div className="comment-actions">
+                        {user && (
+                          <button
+                            className="reply-button"
+                            onClick={() => handleReplyClick(comment._id, null, comment.commentedBy)}
+                          >
+                            Reply
+                          </button>
+                        )}
+
+                        {/* Only show the replies toggle if there are replies */}
+                        {comment.replies && comment.replies.length > 0 && (
+                          <button
+                            className="replies-toggle-button"
+                            onClick={() => toggleReplies(comment._id)}
+                            aria-expanded={visibleReplies[comment._id]}
+                          >
+                            {visibleReplies[comment._id] ? "Hide" : "Show"}{" "}
+                            Replies ({comment.replies.length})
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Reply form - only show if actively replying to the comment itself, not a reply */}
+                      {activeReplyId === comment._id &&
+                        parentReplyId === null && (
+                          <div className="reply-form">
+                            <textarea
+                              value={replyText}
+                              onChange={(e) => setReplyText(e.target.value)}
+                              placeholder="Write a reply..."
+                              required
+                            />
+                            <div className="reply-form-buttons">
+                              <button
+                                onClick={() => handleReplySubmit(comment._id)}
+                                disabled={isSubmitting || !replyText.trim()}
+                              >
+                                {isSubmitting ? "Posting..." : "Post Reply"}
+                              </button>
+                              <button
+                                className="cancel-button"
+                                onClick={cancelReply}
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        )}
+
+                      {/* Replies - only show if visibleReplies[comment._id] is true */}
+                      {comment.replies &&
+                        comment.replies.length > 0 &&
+                        visibleReplies[comment._id] && (
+                          <div className="replies-container">
+                            {comment.replies.map((reply) =>
+                              renderReply(reply, comment._id)
+                            )}
+                          </div>
+                        )}
+                    </div>
+                  );
+                })}
               </div>
             ) : (
               <p>No comments yet. Be the first to comment!</p>
