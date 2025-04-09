@@ -26,7 +26,11 @@ export function FeedPage() {
     if (loggedIn) {
       getPosts(token)
         .then((data) => {
-          setPosts(data.posts);
+          //sorting posts from new to old:
+          const sortedPosts = data.posts.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          );
+          setPosts(sortedPosts);
         })
         .catch((err) => {
           console.error(err);
@@ -38,18 +42,12 @@ export function FeedPage() {
     }
   }, [navigate, user]);
 
-  const handleProfileClick = () => {
-    navigate("/profile");
-  };
-
   return (
     <div className="page-container">
       <Navbar />
 
       <div className="content-container">
-        <div className="header-container">
-          <h2>Posts</h2>
-        </div>
+        <div className="header-container"></div>
         <div className="feed" role="feed">
           <CreatePostForm onPostCreated={handlePostCreated} />
           {posts.map((post, index) => (
@@ -57,7 +55,6 @@ export function FeedPage() {
               className={
                 "round-edge white-text " + (index % 2 == 0 ? "brown" : "yellow")
               }
-
             >
               <Post
                 post={post}
