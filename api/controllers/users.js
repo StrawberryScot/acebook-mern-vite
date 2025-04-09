@@ -108,13 +108,17 @@ const addFriend = async (req, res) => {
   //find the users using the ids
   try {
     const { userSignedIn } = req.body;
+    console.log(userSignedIn)
     const user = await User.findById(userSignedIn);
+    console.log(user)
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
     const friendToAdd = req.params.id;
+    console.log(friendToAdd);
     const friend = await User.findById(friendToAdd);
+    console.log(friend);
     if (!friend) {
       return res.status(404).json({ message: "Friend not found" });
     }

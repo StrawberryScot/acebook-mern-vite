@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { getUserProfileById } from "../../services/Users";
 import { Navbar } from "../../components/navbar/Navbar";
 import "../Profile/ProfilePage.css";
+import AddFriendButton from "../../components/AddFriendButton";
 
 export const UserProfilePage = () => {
   const { userId } = useParams();
@@ -13,7 +14,8 @@ export const UserProfilePage = () => {
   const [error, setError] = useState(null);
 
   const token = localStorage.getItem("token");
-
+  //gets signed in user from token
+  //check if we are friends
   useEffect(() => {
     const fetchUserProfile = async () => {
       setLoading(true);
@@ -152,6 +154,7 @@ export const UserProfilePage = () => {
               <span className="stat-label">Already Friends</span>
             </div>
           )}
+          <AddFriendButton friendId={userId} />
         </div>
 
         {/* Only show full friends list if user is a friend or it's their profile */}
