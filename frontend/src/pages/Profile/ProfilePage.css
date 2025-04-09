@@ -138,3 +138,44 @@
     padding: 24px;
     font-style: italic;
   }
+
+  .placeholder-initials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    color: #555;
+    font-weight: bold;
+    font-size: 20px;
+  }
+  
+  /* Style for authentication message when not logged in */
+  .auth-message {
+    text-align: center;
+    padding: 24px;
+    color: #555;
+  }
+  
+  .auth-message p {
+    margin-bottom: 16px;
+  }
+  
+  /* Friend status indicator in the stats box */
+  .friend-status {
+    background-color: #e8f4ff;
+  }
+  
+  .friend-status .stat-label {
+    color: #1877f2;
+    font-weight: 500;
+  }
+  
+  /* Error message styling */
+  .error-message {
+    color: #d9534f;
+    padding: 16px;
+    margin-bottom: 16px;
+    background-color: #fdf7f7;
+    border-radius: 4px;
+    text-align: center;
+  }
