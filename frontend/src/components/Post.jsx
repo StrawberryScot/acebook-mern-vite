@@ -366,7 +366,7 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
-          }
+          },
         }
       );
       if (postResponse.ok) {
@@ -384,17 +384,27 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
   };
 
   // Handle showing reply form
-  const handleReplyClick = (commentId, replyId = null, repliedByUserId = null) => {
+  const handleReplyClick = (
+    commentId,
+    replyId = null,
+    repliedByUserId = null
+  ) => {
     setActiveReplyId(commentId);
     setParentReplyId(replyId);
     setReplyingToUserId(repliedByUserId);
 
-    // Get the user name based on user ID 
+    // Get the user name based on user ID
     let replyToName = "User";
     if (repliedByUserId) {
-      if (replyUserNames[repliedByUserId] && replyUserNames[repliedByUserId].name) {
+      if (
+        replyUserNames[repliedByUserId] &&
+        replyUserNames[repliedByUserId].name
+      ) {
         replyToName = replyUserNames[repliedByUserId].name.split(" ")[0]; // Just use the first name
-      } else if (commentUserNames[repliedByUserId] && commentUserNames[repliedByUserId].name) {
+      } else if (
+        commentUserNames[repliedByUserId] &&
+        commentUserNames[repliedByUserId].name
+      ) {
         replyToName = commentUserNames[repliedByUserId].name.split(" ")[0];
       }
       setReplyText(`@${replyToName} `);
@@ -523,7 +533,7 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
-          }
+          },
         }
       );
       if (postResponse.ok) {
@@ -560,7 +570,8 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
   // Render a reply component with proper indentation and highlighting
   const renderReply = (reply, commentId, indentLevel = 0) => {
     const isParentReply = parentReplyId === reply._id;
-    const isActiveReply = activeReplyId === commentId && parentReplyId === reply._id;
+    const isActiveReply =
+      activeReplyId === commentId && parentReplyId === reply._id;
     const replyUserName = replyUserNames[reply.repliedBy]?.name || "Loading...";
     const replyProfilePic =
       replyUserNames[reply.repliedBy]?.profilePicture || DEFAULT_PROFILE_PIC;
@@ -584,9 +595,7 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
         {reply.parentReplyId && (
           <div className="reply-parent">
             In response to:{" "}
-            <span className="parent-user">
-              {getUserName(reply.parentReplyId)}
-            </span>
+            <span className="parent-user">{getUserName(reply.repliedBy)}</span>
           </div>
         )}
 
@@ -595,7 +604,9 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
         {user && (
           <button
             className="reply-button"
-            onClick={() => handleReplyClick(commentId, reply._id, reply.repliedBy)}
+            onClick={() =>
+              handleReplyClick(commentId, reply._id, reply.repliedBy)
+            }
           >
             Reply
           </button>
@@ -704,7 +715,13 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
                         {user && (
                           <button
                             className="reply-button"
-                            onClick={() => handleReplyClick(comment._id, null, comment.commentedBy)}
+                            onClick={() =>
+                              handleReplyClick(
+                                comment._id,
+                                null,
+                                comment.commentedBy
+                              )
+                            }
                           >
                             Reply
                           </button>
