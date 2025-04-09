@@ -1,3 +1,4 @@
+/* Navbar.css */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -15,36 +16,27 @@
     justify-content: center;
 }
 
-@media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        padding: 1rem;
-    }
-
-    .auth-links {
-        width: 100%;
-    }
-}
-
 .profile-pic-container {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 60px;
+    height: 60px;
     border-radius: 50%;
     overflow: hidden;
     background-color: #f0f0f0;
     border: 2px solid #d69723;
     filter: drop-shadow(0 0 0.2rem #d69723);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+    position: relative;
+    z-index: 5000;
+    pointer-events: all;
 }
 
-.profile-pic-container a {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.profile-pic-container:hover {
+    transform: scale(1.5);
+    cursor: pointer;
 }
 
 .profile-pic {
@@ -53,8 +45,13 @@
     object-fit: cover;
 }
 
-.profile-pic-container:hover {
-    transform: scale(1.05);
-    transition: transform 0.2s ease;
-    cursor: pointer;
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        padding: 1rem;
+    }
+    .auth-links {
+        width: 100%;
+        margin-top: 1rem;
+    }
 }

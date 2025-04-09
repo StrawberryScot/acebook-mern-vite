@@ -37,45 +37,58 @@ export function FeedPage() {
     }
   }, [navigate, user]);
 
-  return (
-    <div className="content-container">
-      <div className="feed" role="feed">
-        {posts.map((post, index) => (
-          <div
-            className={
-              "round-edge white-text " + (index % 2 == 0 ? "brown" : "yellow")
-            }
-          >
-            <Post
-              post={post}
-              key={post._id}
-              onPostDeleted={(deletedPostId) => {
-                setPosts((prevPosts) =>
-                  prevPosts.filter((post) => post._id !== deletedPostId)
-                );
-              }}
-              onPostUpdated={(updatedPost) => {
-                setPosts((prevPosts) =>
-                  prevPosts.map((post) =>
-                    post._id === updatedPost._id ? updatedPost : post
-                  )
-                );
-              }}
-              onLikeUpdated={(postId, action) => {
-                setPosts((prevPosts) =>
-                  prevPosts.map((post) => {
-                    if (post._id === postId) {
-                      const userId = user._id;
-                      const updatedLikes = [...post.likes];
+  const handleProfileClick = () => {
+    navigate("/profile");
+  };
 
-                      if (action === "like" && !updatedLikes.includes(userId)) {
-                        updatedLikes.push(userId);
-                      } else if (action === "unlike") {
-                        const index = updatedLikes.indexOf(userId);
-                        if (index !== -1) {
-                          updatedLikes.splice(index, 1);
+  return (
+    <div className="page-container">
+      <div className="content-container">
+        <div className="header-container">
+          <h2>Posts</h2>
+        </div>
+        <div className="feed" role="feed">
+          <CreatePostForm onPostCreated={handlePostCreated} />
+          {posts.map((post, index) => (
+            <div
+              className={
+                "round-edge white-text " + (index % 2 == 0 ? "brown" : "yellow")
+              }
+
+            >
+              <Post
+                post={post}
+                key={post._id}
+                onPostDeleted={(deletedPostId) => {
+                  setPosts((prevPosts) =>
+                    prevPosts.filter((post) => post._id !== deletedPostId)
+                  );
+                }}
+                onPostUpdated={(updatedPost) => {
+                  setPosts((prevPosts) =>
+                    prevPosts.map((post) =>
+                      post._id === updatedPost._id ? updatedPost : post
+                    )
+                  );
+                }}
+                onLikeUpdated={(postId, action) => {
+                  setPosts((prevPosts) =>
+                    prevPosts.map((post) => {
+                      if (post._id === postId) {
+                        const userId = user._id;
+                        const updatedLikes = [...post.likes];
+
+                        if (
+                          action === "like" &&
+                          !updatedLikes.includes(userId)
+                        ) {
+                          updatedLikes.push(userId);
+                        } else if (action === "unlike") {
+                          const index = updatedLikes.indexOf(userId);
+                          if (index !== -1) {
+                            updatedLikes.splice(index, 1);
+                          }
                         }
-                      }
 
                       return { ...post, likes: updatedLikes };
                     }

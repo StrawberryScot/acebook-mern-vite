@@ -12,6 +12,27 @@ async function getAllPosts(req, res) {
   }
 }
 
+async function getUserPosts(req, res) {
+  try {
+    const userId = req.params.userId;
+
+    if (userId !== req.user_id) {
+      return res.status(403).json({
+        message: "Add friend if you want to view their posts!",
+      });
+    }
+
+    const posts = await Post.find({ postedBy: userId })
+      .sort({ createdAt: -1 })
+      .populate("postedBy", "firstName lastName profilePicPath");
+
+    res.status(200).json({ posts });
+  } catch (error) {
+    console.log("Error in getUserPosts controller", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+}
+
 async function createPost(req, res) {
   try {
     const { postedBy, text } = req.body;
@@ -203,14 +224,28 @@ async function replyToComment(req, res) {
   }
 }
 
+async function getPostById (req, res) {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    res.status(200).json(post);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching post", error: error.message });
+  }
+};
+
 const PostsController = {
   getAllPosts: getAllPosts,
+  getUserPosts: getUserPosts,
   createPost: createPost,
   updatePost: updatePost,
   deletePost: deletePost,
   likeUnlikePost: likeUnlikePost,
   commentToPost: commentToPost,
   replyToComment: replyToComment,
+  getPostById
 };
 
 module.exports = PostsController;
