@@ -43,7 +43,10 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
   // Updating comments when post prop changes
   useEffect(() => {
     if (post && post.comments) {
-      setComments([...post.comments]);
+      const sortedComments = [...post.comments].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setComments(sortedComments);
     }
   }, [post]);
 
@@ -772,9 +775,12 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
                         comment.replies.length > 0 &&
                         visibleReplies[comment._id] && (
                           <div className="replies-container">
-                            {comment.replies.map((reply) =>
-                              renderReply(reply, comment._id)
-                            )}
+                            {[...comment.replies]
+                              .sort(
+                                (a, b) =>
+                                  new Date(b.createdAt) - new Date(a.createdAt)
+                              )
+                              .map((reply) => renderReply(reply, comment._id))}
                           </div>
                         )}
                     </div>
