@@ -56,7 +56,7 @@ const getUserByToken = async (req, res) => {
 
 const getNameById = async (req, res) => {
   const userId = req.params.id;
-  
+
   // console.log("Incoming user ID param:", req.params.id);
 
   if (!userId || userId.length !== 24) {
@@ -107,27 +107,76 @@ const addFriend = async (req, res) => {
   //get the ids from the request of person adding, and person to be added
   //find the users using the ids
   try {
-    const {userSignedIn} = req.body;
+    const { userSignedIn } = req.body;
     const user = await User.findById(userSignedIn);
     if (!user) {
-      return res.status(404).json({message: 'User not found'});
+      return res.status(404).json({ message: "User not found" });
     }
-    
+
     const friendToAdd = req.params.id;
     const friend = await User.findById(friendToAdd);
-    if (!friend){
-      return res.status(404).json({message: 'Friend not found'});
+    if (!friend) {
+      return res.status(404).json({ message: "Friend not found" });
     }
 
     friend.friends.push(userSignedIn);
     await friend.save();
-    return res.status(200).json({message:'Friend added successfully'});
+    return res.status(200).json({ message: "Friend added successfully" });
+  } catch (error) {
+    console.error("addFriend function has an error: ", error);
+    return res.status(500).json({ message: "Error adding a friend" });
   }
-  catch (error){
-    console.error('addFriend function has an error: ', error);
-    return res.status(500).json({message: 'Error adding a friend'});
+};
+
+const getUserProfile = async (req, res) => {
+  console.log("Auth header:", req.headers.authorization);
+  console.log("Request user object:", req.user);
+  console.log("Requested profile ID:", req.params.id);
+  const userId = req.params.id;
+  const requestingUserId = req.user;
+  console.log(requestingUserId);
+
+  if (!userId || userId.length !== 24) {
+    return res.status(400).json({ message: "Invalid user ID format" });
   }
-}
+
+  try {
+    const user = await User.findById(userId).select(
+      "firstName lastName email friends status profilePicPath backgroundPicPath isOnlyFriends"
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isFriend = user.friends.includes(requestingUserId);
+
+    const userProfile = {
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      status: user.status,
+      profilePicPath: user.profilePicPath,
+      backgroundPicPath: user.backgroundPicPath,
+      isFriend: isFriend,
+
+      // Only return full friends list if the requesting user is a friend or it's their own profile
+      friends:
+        isFriend || userId === requestingUserId
+          ? user.friends
+          : user.friends.length,
+
+      // Include privacy setting only if it's the user's own profile
+      ...(userId === requestingUserId && { isOnlyFriends: user.isOnlyFriends }),
+    };
+
+    return res.status(200).json(userProfile);
+  } catch (err) {
+    console.error("Error fetching user profile: ", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 
 const UsersController = {
@@ -136,6 +185,7 @@ const UsersController = {
   getNameById,
   getUserProfileById,
   addFriend: addFriend,
+  getUserProfile: getUserProfile,
 };
 
 module.exports = UsersController;
