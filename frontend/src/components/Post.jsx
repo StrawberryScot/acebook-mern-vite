@@ -6,6 +6,7 @@ import EditPostForm from "./EditPostForm";
 import LikeButton from "./LikeButton";
 import "./Comments.css";
 import "./Post.css";
+import images from "../images"
 
 function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
   const navigate = useNavigate();
@@ -51,8 +52,7 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
   const [visibleReplies, setVisibleReplies] = useState({});
 
   // Default profile picture path
-  const DEFAULT_PROFILE_PIC =
-    "https://i.pinimg.com/564x/1b/b0/e8/1bb0e8072b1289f1acd6b80cfc941e59.jpg";
+  const DEFAULT_PROFILE_PIC = images.default_avatar;
 
   // Debug logging function - add this to help diagnose issues
   const debugLog = (message, data) => {
