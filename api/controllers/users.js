@@ -110,8 +110,14 @@ const updateUserProfile = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
     const { profilePicPath, status } = req.body;
-    user.profilePicPath = profilePicPath;
-    user.status = status;
+
+    if (profilePicPath !== undefined) {
+      user.profilePicPath = profilePicPath;
+    }
+    if (status !== undefined) {
+      user.status = status;
+    }
+
     await user.save();
 
     return res.status(200).json({
