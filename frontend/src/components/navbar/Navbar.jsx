@@ -14,6 +14,17 @@ export function Navbar() {
   };
 
   const user = useSelector((state) => state.user.user);
+
+  const getStatusClass = () => {
+    if (!user) return "status-offline";
+
+    switch(user.status) {
+      case "online": return "status-online";
+      case "busy": return "status-busy";
+      default: return "status-offline"
+    }
+  };
+
   return (
     <nav className="navbar">
       <HivemindLogo />
@@ -27,6 +38,7 @@ export function Navbar() {
                 alt="Profile"
                 className="profile-pic"
               />
+              <div className={`status-indicator ${getStatusClass()}`}></div>
             </div>
             <div>
               <LogoutButton />
