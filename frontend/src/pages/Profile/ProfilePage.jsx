@@ -110,16 +110,14 @@ export function ProfilePage() {
     <div className="content-container">
       <Navbar />
       <div className="profile-header">
-        <button
-          className="back-button"
-          onClick={handleBackToFeed}
-          aria-label="Back to feed"
-        >
-          <span>Back to Feed</span>
+        <button className="back-button" onClick={handleBackToFeed}>
+          <i class="fa-solid fa-backward"></i>
+          <span>
+            <p>Back</p>
+          </span>
         </button>
-        <h2>My Profile</h2>
+        <div className="title-my-profile"><h2>My Profile</h2></div>
       </div>
-
       <div className="profile-container">
         <div className="profile-info">
           <div className="profile-avatar">

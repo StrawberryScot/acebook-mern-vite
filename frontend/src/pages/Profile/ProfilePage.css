@@ -1,181 +1,212 @@
 .profile-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 24px;
-  }
-  
-  .back-button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: none;
-    border: none;
-    padding: 8px;
-    cursor: pointer;
-    margin-right: 16px;
-    color: #555;
-  }
-  
-  .back-button:hover {
-    color: #000;
-  }
-  
-  .profile-container {
-    background-color: white;
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .profile-info {
-    display: flex;
-    gap: 24px;
-    margin-bottom: 24px;
-  }
-  
-  .profile-avatar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    overflow: hidden;
-    background-color: #f0f0f0;
-    border: 2px solid #d69723;
-    filter: drop-shadow(0 0 0.2rem #d69723);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease;
-    position: relative;
-    z-index: 5000;
-    pointer-events: all;
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
 }
-  
-  .profile-details {
-    flex: 1;
-  }
-  
-  .profile-details h3 {
-    margin-top: 0;
-    margin-bottom: 8px;
-    font-size: 24px;
-  }
-  
-  .profile-email {
-    color: #666;
-    margin-bottom: 12px;
-  }
-  
-  .profile-bio {
-    color: #333;
-    line-height: 1.5;
-  }
-  
-  .profile-stats {
-    display: flex;
-    gap: 24px;
-    margin-bottom: 24px;
-  }
-  
-  .stat-box {
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    padding: 16px;
-    min-width: 100px;
-    text-align: center;
-  }
-  
-  .stat-number {
-    display: block;
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 4px;
-  }
-  
-  .stat-label {
-    color: #666;
-  }
-  
-  .profile-actions {
-    margin-bottom: 24px;
-  }
-  
-  .edit-profile-button {
-    background-color: #f0f0f0;
-    border: none;
-    border-radius: 20px;
-    padding: 8px 16px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.2s;
-  }
-  
-  .edit-profile-button:hover {
-    background-color: #e0e0e0;
-  }
-  
-  .user-posts-section h3 {
-    margin-top: 0;
-    margin-bottom: 16px;
-  }
-  
-  .user-posts {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  
-  .user-post-card {
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    padding: 16px;
-  }
-  
-  .no-posts-message {
-    color: #666;
-    text-align: center;
-    padding: 24px;
-    font-style: italic;
-  }
 
-  .placeholder-initials {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f0f0f0;
-    color: #555;
-    font-weight: bold;
-    font-size: 20px;
-  }
-  
-  /* Style for authentication message when not logged in */
-  .auth-message {
-    text-align: center;
-    padding: 24px;
-    color: #555;
-  }
-  
-  .auth-message p {
-    margin-bottom: 16px;
-  }
-  
-  /* Friend status indicator in the stats box */
-  .friend-status {
-    background-color: #e8f4ff;
-  }
-  
-  .friend-status .stat-label {
-    color: #1877f2;
-    font-weight: 500;
-  }
-  
-  /* Error message styling */
-  .error-message {
-    color: #d9534f;
-    padding: 16px;
-    margin-bottom: 16px;
-    background-color: #fdf7f7;
-    border-radius: 4px;
-    text-align: center;
-  }
+.title-my-profile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 40%;
+  margin-top: 1rem;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(244, 244, 244, 0.706);
+  border: 1px solid #ddd;
+  padding: 0px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 900;
+  transition: all 0.2s ease;
+  margin-top: 1.2rem;
+  border: 2px solid #d5962d;
+  color: #575c0e;
+  margin-right: auto;
+}
+
+.back-button:hover {
+  color: #ffffff;
+  background-color: #d5962d;
+  box-shadow: 0 2px 6px #d5962d;
+}
+
+.profile-container {
+  background-color: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-info {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.profile-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #f0f0f0;
+  border: 2px solid #d69723;
+  filter: drop-shadow(0 0 0.2rem #d69723);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+  position: relative;
+  z-index: 5000;
+  pointer-events: all;
+}
+
+.stat-box {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.profile-image {
+  height: 100px;
+}
+
+.profile-details {
+  flex: 1;
+  margin-right: 35%;
+  text-align: left;
+}
+
+.profile-details h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 24px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.profile-email {
+  color: #666;
+  margin-bottom: 12px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.profile-bio {
+  color: #333;
+  line-height: 1.5;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.stat-box {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 16px;
+  min-width: 100px;
+  text-align: center;
+}
+
+.stat-number {
+  display: block;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  color: #666;
+}
+
+.profile-actions {
+  margin-bottom: 24px;
+}
+
+.edit-profile-button {
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.edit-profile-button:hover {
+  background-color: #e0e0e0;
+}
+
+.user-posts-section h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.user-posts {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.user-post-card {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.no-posts-message {
+  color: #666;
+  text-align: center;
+  padding: 24px;
+  font-style: italic;
+}
+
+.placeholder-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  color: #555;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+/* Style for authentication message when not logged in */
+.auth-message {
+  text-align: center;
+  padding: 24px;
+  color: #555;
+}
+
+.auth-message p {
+  margin-bottom: 16px;
+}
+
+/* Friend status indicator in the stats box */
+.friend-status {
+  background-color: #e8f4ff;
+}
+
+.friend-status .stat-label {
+  color: #1877f2;
+  font-weight: 500;
+}
+
+/* Error message styling */
+.error-message {
+  color: #d9534f;
+  padding: 16px;
+  margin-bottom: 16px;
+  background-color: #fdf7f7;
+  border-radius: 4px;
+  text-align: center;
+}
