@@ -21,6 +21,27 @@ export async function getUserProfileById(token, userId) {
   return data;
 }
 
+export async function updateUserProfile(token, userId, profilePicPath, status) {
+  const requestOptions = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ profilePicPath, status }),
+  };
+
+  const response = await fetch(
+    `${BACKEND_URL}/users/${userId}/updateProfile`,
+    requestOptions
+  );
+  if (response.status !== 200) {
+    throw new Error("Unable to update profile");
+  }
+  const data = await response.json();
+  return data;
+}
+
 export async function addFriend(token, friendUserId) {
   if (!friendUserId) {
     throw new Error("friendUserId is required");
@@ -36,13 +57,13 @@ export async function addFriend(token, friendUserId) {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ userSignedIn }),
-    
   };
 
-  const response = await fetch(`${BACKEND_URL}/users/${friendUserId}/friend`,
+  const response = await fetch(
+    `${BACKEND_URL}/users/${friendUserId}/friend`,
     requestOptions
   );
-  
+
   if (response.status !== 200) {
     throw new Error("Unable to add friend");
   }
@@ -66,4 +87,3 @@ function extractUserIdFromToken(token) {
     return null;
   }
 }
-
