@@ -46,9 +46,45 @@
   cursor: pointer;
 }
 
-.edit-delete-buttons {
+.delete-button {
   display: flex;
   gap: 1rem;
+  margin-top: 1rem;
+}
+
+.edit-button {
+  display: flex;
+  width: 37px;
+  height: 27.33px;
+  gap: 1rem;
+}
+
+.edit-buttons {
+  margin-top: 0.5rem
+}
+
+.edit-textarea {
+  background-color: #ffffffd3;
+  border-left: 3px solid #9c0707;
+  padding: 10px;
+  border-radius: 5px;
+  color: rgb(0, 0, 0);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.cancel-edit-button,
+.save-edit-button,
+.delete-confirm-button,
+.delete-cancel-button
+{
+  background: rgba(56, 56, 56, 0.79);
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  margin-right: 15px;
 }
 
 .post-actions {

@@ -100,7 +100,6 @@ export function FeedPage() {
             </div>
           ))}
         </div>
-        <LogoutButton />
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import { HivemindLogo } from "../../components/HivemindLogo";
 import "./Navbar.css";
 import images from "../../images";
 import { useSelector } from "react-redux";
+import LogoutButton from "../LogoutButton";
 
 export function Navbar() {
   const navigate = useNavigate();
@@ -18,13 +19,18 @@ export function Navbar() {
       <HivemindLogo />
       <div className="auth-links">
         {user ? (
-          <div className="profile-pic-container">
-            <img
-              src={user?.profilePicPath || images.default_avatar}
-              onClick={handleViewProfile}
-              alt="Profile"
-              className="profile-pic"
-            />
+          <div className="loggedin-navbar-buttons">
+            <div className="profile-pic-container">
+              <img
+                src={user?.profilePicPath || images.default_avatar}
+                onClick={handleViewProfile}
+                alt="Profile"
+                className="profile-pic"
+              />
+            </div>
+            <div>
+              <LogoutButton />
+            </div>
           </div>
         ) : (
           <Link to="/login" className="button">

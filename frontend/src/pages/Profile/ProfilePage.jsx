@@ -147,7 +147,9 @@ export function ProfilePage() {
             <p>Back</p>
           </span>
         </button>
-        <div className="title-my-profile"><h2>My Profile</h2></div>
+        <div className="title-my-profile">
+          <h2>My Profile</h2>
+        </div>
       </div>
       <div className="profile-container">
         <div className="profile-info">
@@ -268,8 +270,6 @@ export function ProfilePage() {
           )}
         </div>
       </div>
-
-      <LogoutButton />
     </div>
   );
 }

@@ -1,60 +1,67 @@
 /* Navbar.css */
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: #ededed;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    position: relative;
-    height: auto;
-    width: 100%;
-    margin: 0;
-    box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #303309c0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0; /* Position at the top of the viewport */
+  left: 0; /* This is to ensure it starts from the left edge */
+  right: 0; /* This is to ensure it extends to the right edge */
+  height: auto;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+/* This is to prevent content from hiding behind the navbar */
+body {
+  padding-top: 150px;
 }
 
 .auth-links {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .profile-pic-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    overflow: hidden;
-    background-color: #f0f0f0;
-    border: 2px solid #d69723;
-    filter: drop-shadow(0 0 0.2rem #d69723);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease;
-    position: relative;
-    z-index: 5000;
-    pointer-events: all;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #f0f0f0;
+  border: 2px solid #d69723;
+  filter: drop-shadow(0 0 0.2rem #d69723);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+  position: relative;
+  z-index: 5000;
+  pointer-events: all;
 }
 
 .profile-pic-container:hover {
-    transform: scale(1.5);
-    cursor: pointer;
+  transform: scale(1.5);
+  cursor: pointer;
 }
 
 .profile-pic {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 @media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        padding: 1rem;
-    }
-    .auth-links {
-        width: 100%;
-        margin-top: 1rem;
-    }
+  .navbar {
+    flex-direction: column;
+    padding: 1rem;
+  }
+  .auth-links {
+    width: 100%;
+    margin-top: 1rem;
+  }
 }

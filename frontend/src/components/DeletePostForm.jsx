@@ -34,19 +34,25 @@ function DeletePostForm({ post, onPostDeleted }) {
 
   return (
     <div className="delete-post-form">
-      <button
-        onClick={handleDeleteClick}
-        className="delete-button"
-        aria-label="Delete post"
-      >
-        <i class="fa-solid fa-trash fa-beat"></i>
-      </button>
+      {!showConfirm && (
+        <button
+          onClick={handleDeleteClick}
+          className="delete-button"
+          aria-label="Delete post"
+        >
+          <i className="fa-solid fa-trash fa-beat"></i>
+        </button>
+      )}
 
       {showConfirm && (
         <div className="delete-confirm-modal">
-          <p>Are you sure you want to delete this post?</p>
+          <p>
+            Are you sure <br />
+            you want to <br />
+            delete this post?
+          </p>
           <div className="delete-confirm-buttons">
-            <button onClick={handleCancelDelete} disabled={isDeleting}>
+            <button onClick={handleCancelDelete} disabled={isDeleting} className="delete-cancel-button">
               Cancel
             </button>
             <button
