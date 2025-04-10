@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { getUserProfileById } from "../../services/Users";
+import { getUserProfileById , getFriends } from "../../services/Users";
 import { Navbar } from "../../components/navbar/Navbar";
 import "../Profile/ProfilePage.css";
 import AddFriendButton from "../../components/AddFriendButton";
 import images from "../../images";
 
 export const UserProfilePage = () => {
+  const user = useSelector((state) => state.user.user);
   const { userId } = useParams();
   const navigate = useNavigate();
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isFriends, setIsFriends] = useState(false);
 
   const token = localStorage.getItem("token");
   //gets signed in user from token
@@ -22,7 +24,6 @@ export const UserProfilePage = () => {
       setLoading(true);
       try {
         const profileData = await getUserProfileById(token, userId);
-        console.log(profileData);
         setUserProfile(profileData);
         setError(null);
       } catch (err) {
@@ -39,6 +40,7 @@ export const UserProfilePage = () => {
       setError("Please log in to view this profile");
       setLoading(false);
     }
+
   }, [userId, token]);
 
   const handleBackToFeed = () => {
@@ -99,6 +101,7 @@ export const UserProfilePage = () => {
   }
 
   console.log(userProfile);
+  console.log(userProfile.isFriend)
 
   return (
     <div className="content-container">
@@ -154,7 +157,7 @@ export const UserProfilePage = () => {
               <span className="stat-label">Already Friends</span>
             </div>
           )}
-          <AddFriendButton friendId={userId} />
+          <AddFriendButton friendId={userId} currentUserId={user._id} />
         </div>
 
         {/* Only show full friends list if user is a friend or it's their profile */}
