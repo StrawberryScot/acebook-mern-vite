@@ -42,13 +42,8 @@ export function FeedPage() {
   };
 
   return (
-    <div className="page-container">
       <div className="content-container">
-        <div className="header-container">
-          <h2>Posts</h2>
-        </div>
         <div className="feed" role="feed">
-          <CreatePostForm onPostCreated={handlePostCreated} />
           {posts.map((post, index) => (
             <div
               className={
@@ -99,12 +94,11 @@ export function FeedPage() {
             />
           </div>
         ))}
-      </div>
-      <div className="right-5vh">
-        <Navbar />
+        </div>
+        <div className="right-5vh">
+          <Navbar />
         <CreatePostForm onPostCreated={handlePostCreated} />
-
+        </div>
       </div>
-    </div>
   );
 }
