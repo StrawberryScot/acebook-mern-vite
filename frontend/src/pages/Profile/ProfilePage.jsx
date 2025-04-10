@@ -257,8 +257,8 @@ export function ProfilePage() {
                       <span>
                         {new Date(post.createdAt).toLocaleDateString()}
                       </span>
-                      <span>{post.likes.length} likes</span>
-                      <span>{post.comments.length} comments</span>
+                      <span> {post.likes.length} likes </span>
+                      <span> {post.comments.length} comment(s) </span>
                     </div>
                   </div>
                 ))
