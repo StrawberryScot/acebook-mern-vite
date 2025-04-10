@@ -13,12 +13,14 @@ function LogoutButton() {
   }
 
   return (
-    <button
-      onClick={logOut}
-      className="round-edge primary-text-color primary-background-color std-padding button"
-    >
-      Log out
-    </button>
+    <div className="logout-button">
+      <button
+        onClick={logOut}
+        className="round-edge primary-text-color primary-background-color std-padding button"
+      >
+        Log out
+      </button>
+    </div>
   );
 }
 

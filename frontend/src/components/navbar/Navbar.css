@@ -1,29 +1,54 @@
 /* Navbar.css */
+:root {
+  --navbar-height: 150px;
+  --navbar-minimized-height: 90px;
+}
+
+.header-container {
+  margin-top: 50px;
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: #303309c0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #7a785b00;
+
   position: fixed;
   top: 0; /* Position at the top of the viewport */
   left: 0; /* This is to ensure it starts from the left edge */
   right: 0; /* This is to ensure it extends to the right edge */
-  height: auto;
+  height: var(--navbar-height);
   width: 100%;
   margin: 0;
   box-sizing: border-box;
+  z-index: 3000;
+  transition: all 0.3s ease;
 }
+
+/* Class for minimized navbar */
+.navbar.minimized {
+  height: var(--navbar-minimized-height);
+  padding: 0.5rem 2rem;
+}
+
 /* This is to prevent content from hiding behind the navbar */
 body {
-  padding-top: 150px;
+  padding-top: 300px;
+  margin-top: 200px;
+}
+
+/* This ensures that anchors and scroll targets account for the navbar */
+html {
+  scroll-padding-top: 300px;
 }
 
 .auth-links {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.3s ease;
 }
 
 .profile-pic-container {
@@ -38,10 +63,29 @@ body {
   border: 2px solid #d69723;
   filter: drop-shadow(0 0 0.2rem #d69723);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease;
+  transition: all 0.3s ease;
   position: relative;
   z-index: 5000;
   pointer-events: all;
+}
+
+/* Minimize the profile pic when navbar is minimized */
+.navbar.minimized .profile-pic-container {
+  margin-left: 0.8rem;
+  margin-top: 20px;
+  width: 50px;
+  height: 50px;
+}
+
+.navbar.minimized .logo img {
+  height: 1.5rem;
+}
+
+.navbar.minimized .logout-button button {
+  height: 0.5rem;
+  font-size: 0.5rem;
+  color: #d69723;
+  margin-top: 0.1rem;
 }
 
 .profile-pic-container:hover {
@@ -57,17 +101,6 @@ body {
   overflow: hidden;
 }
 
-@media (max-width: 768px) {
-  .navbar {
-    flex-direction: column;
-    padding: 1rem;
-  }
-  .auth-links {
-    width: 100%;
-    margin-top: 1rem;
-  }
-}
-
 .status-indicator {
   position: absolute;
   bottom: 0px;
@@ -78,17 +111,45 @@ body {
   border: 2px solid white;
   z-index: 9999;
   overflow: visible;
- 
+  transition: all 0.3s ease;
+}
+
+/* Adjust status indicator size when navbar is minimized */
+.navbar.minimized .status-indicator {
+  width: 12px;
+  height: 12px;
+  border-width: 1px;
 }
 
 .status-online {
-  background-color:#04764c;
+  background-color: #04764c;
 }
 
 .status-busy {
-  background-color: #ce6612; 
+  background-color: #ce6612;
 }
 
 .status-offline {
-  background-color: #808080; 
+  background-color: #808080;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --navbar-height: 150px;
+    --navbar-minimized-height: 100px;
+  }
+
+  .navbar {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .navbar.minimized {
+    padding: 0.5rem;
+  }
+
+  .auth-links {
+    width: 100%;
+    margin-top: 1rem;
+  }
 }
