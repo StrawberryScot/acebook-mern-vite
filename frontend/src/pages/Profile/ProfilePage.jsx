@@ -8,6 +8,7 @@ import { Navbar } from "../../components/navbar/Navbar";
 import LogoutButton from "../../components/LogoutButton";
 import "../../App.css";
 import "./ProfilePage.css";
+import images from "../../images";
 
 export function ProfilePage() {
   const navigate = useNavigate();
@@ -155,7 +156,7 @@ export function ProfilePage() {
         <div className="profile-info">
           <div className="profile-avatar">
             <img
-              src={user?.profilePicPath || "/default_avatar.png"}
+              src={user?.profilePicPath || images.default_avatar}
               alt="Profile"
               className="profile-image"
             />
