@@ -5,6 +5,7 @@ import { getUserProfileById } from "../../services/Users";
 import { Navbar } from "../../components/navbar/Navbar";
 import "../Profile/ProfilePage.css";
 import AddFriendButton from "../../components/AddFriendButton";
+import images from "../../images";
 
 export const UserProfilePage = () => {
   const { userId } = useParams();
@@ -124,8 +125,7 @@ export const UserProfilePage = () => {
               />
             ) : (
               <div className="profile-image placeholder-initials">
-                {userProfile.firstName?.charAt(0)}
-                {userProfile.lastName?.charAt(0)}
+                <img src={images.default_avatar} />
               </div>
             )}
           </div>
