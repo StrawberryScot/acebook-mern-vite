@@ -22,13 +22,17 @@ export async function getUserProfileById(token, userId) {
 }
 
 export async function updateUserProfile(token, userId, profilePicPath, status) {
+  const updateData = {};
+  if (profilePicPath !== undefined) updateData.profilePicPath = profilePicPath;
+  if (status !== undefined) updateData.status = status;
+
   const requestOptions = {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ profilePicPath, status }),
+    body: JSON.stringify(updateData),
   };
 
   const response = await fetch(

@@ -24,9 +24,16 @@ export function ProfilePage() {
 
   useEffect(() => {
     // Check if user is logged in
-    if (!user) {
+    if (!user || !token) {
+      // If no user or token, set status to offline and redirect to login
+      if (userStatus !== "offline") {
+        updateUserStatusInApp("offline");
+      }
       navigate("/login");
       return;
+    } else if (userStatus === "offline" && user && token) {
+      // If user was offline but is now logged in, set to online
+      updateUserStatusInApp("online");
     }
 
     async function fetchUserPosts() {
@@ -44,7 +51,32 @@ export function ProfilePage() {
     }
 
     fetchUserPosts();
-  }, [user, token, navigate]);
+  }, [user, token, navigate, userStatus]);
+
+  // Function to update user status in the backend and Redux store
+  const updateUserStatusInApp = async (newStatus) => {
+    try {
+      setIsLoading(true);
+
+      if (token && user?._id) {
+        // Only call the API if we have a token and user ID
+        await updateUserProfile(token, user._id, undefined, newStatus);
+
+        // Update the user in Redux store
+        dispatch(setUser({ ...user, status: newStatus }));
+      }
+
+      setUserStatus(newStatus);
+      if (newStatus !== "offline") {
+        setUpdateMessage(`Status updated to ${newStatus}`);
+      }
+    } catch (err) {
+      console.error("Failed to update status:", err);
+      setUpdateMessage("Failed to update status. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleBackToFeed = () => {
     navigate("/posts");
@@ -80,30 +112,29 @@ export function ProfilePage() {
     }
   };
 
+  // Modified status toggle to switch between online and busy
   const handleStatusToggle = async () => {
-    const newStatus = userStatus === "online" ? "offline" : "online";
-
-    try {
-      setIsLoading(true);
-      // Call the updateUserProfile service with just the status
-      const updatedUser = await updateUserProfile(
-        token,
-        user._id,
-        undefined,
-        newStatus
-      );
-
-      // Update the user in Redux store
-      dispatch(setUser({ ...user, status: newStatus }));
-
-      setUserStatus(newStatus);
-      setUpdateMessage(`Status updated to ${newStatus}`);
-    } catch (err) {
-      console.error("Failed to update status:", err);
-      setUpdateMessage("Failed to update status. Please try again.");
-    } finally {
-      setIsLoading(false);
+    // If user is not logged in, don't allow toggling
+    if (!token || !user) {
+      setUpdateMessage("You need to be logged in to change your status.");
+      return;
     }
+
+    // Toggle between online and busy
+    const newStatus = userStatus === "online" ? "busy" : "online";
+    updateUserStatusInApp(newStatus);
+  };
+
+  // Determine what text to show on the status button
+  const getStatusButtonText = () => {
+    if (userStatus === "offline") return "Offline";
+    if (userStatus === "busy") return "Busy";
+    return "Online";
+  };
+
+  // Determine what class to apply to the status button
+  const getStatusButtonClass = () => {
+    return `status-toggle ${userStatus}`;
   };
 
   return (
@@ -137,11 +168,16 @@ export function ProfilePage() {
             <div className="user-status">
               <span>Status: </span>
               <button
-                className={`status-toggle ${userStatus}`}
+                className={getStatusButtonClass()}
                 onClick={handleStatusToggle}
-                disabled={isLoading}
+                disabled={isLoading || userStatus === "offline"}
+                title={
+                  userStatus === "offline"
+                    ? "You're offline. Log in to change status."
+                    : "Click to toggle between Online and Busy"
+                }
               >
-                {userStatus === "online" ? "Online" : "Offline"}
+                {getStatusButtonText()}
               </button>
             </div>
           </div>
