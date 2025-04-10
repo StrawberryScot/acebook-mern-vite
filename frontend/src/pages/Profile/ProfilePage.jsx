@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { getUserPosts } from "../../services/posts";
-import { HivemindLogo } from "../../components/HivemindLogo";
+import { updateUserProfile } from "../../services/Users";
+import { setUser } from "../../redux/userSlice";
 import { Navbar } from "../../components/navbar/Navbar";
 import LogoutButton from "../../components/LogoutButton";
 import "../../App.css";
@@ -10,11 +11,16 @@ import "./ProfilePage.css";
 
 export function ProfilePage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const token = localStorage.getItem("token");
+  const [userStatus, setUserStatus] = useState(user?.status || "online");
   const [userPosts, setUserPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showProfilePicForm, setShowProfilePicForm] = useState(false);
+  const [profilePicPath, setProfilePicPath] = useState("");
+  const [updateMessage, setUpdateMessage] = useState("");
 
   useEffect(() => {
     // Check if user is logged in
@@ -42,6 +48,62 @@ export function ProfilePage() {
 
   const handleBackToFeed = () => {
     navigate("/posts");
+  };
+
+  const handleUpdateProfilePic = async (e) => {
+    e.preventDefault();
+    if (!profilePicPath.trim()) {
+      setUpdateMessage("Please enter a valid profile picture path");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      // Call the updateUserProfile service
+      const updatedUser = await updateUserProfile(
+        token,
+        user._id,
+        profilePicPath
+      );
+
+      // Update the user in Redux store using the setUser action
+      dispatch(setUser({ ...user, profilePicPath }));
+
+      setUpdateMessage("Profile picture updated successfully!");
+      setShowProfilePicForm(false);
+      setProfilePicPath("");
+    } catch (err) {
+      console.error("Failed to update profile picture:", err);
+      setUpdateMessage("Failed to update profile picture. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleStatusToggle = async () => {
+    const newStatus = userStatus === "online" ? "offline" : "online";
+
+    try {
+      setIsLoading(true);
+      // Call the updateUserProfile service with just the status
+      const updatedUser = await updateUserProfile(
+        token,
+        user._id,
+        undefined,
+        newStatus
+      );
+
+      // Update the user in Redux store
+      dispatch(setUser({ ...user, status: newStatus }));
+
+      setUserStatus(newStatus);
+      setUpdateMessage(`Status updated to ${newStatus}`);
+    } catch (err) {
+      console.error("Failed to update status:", err);
+      setUpdateMessage("Failed to update status. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -72,7 +134,16 @@ export function ProfilePage() {
             <p className="profile-email">
               {user?.email || "email@example.com"}
             </p>
-            <p className="profile-bio">{user?.bio || "No bio available"}</p>
+            <div className="user-status">
+              <span>Status: </span>
+              <button
+                className={`status-toggle ${userStatus}`}
+                onClick={handleStatusToggle}
+                disabled={isLoading}
+              >
+                {userStatus === "online" ? "Online" : "Offline"}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -90,12 +161,52 @@ export function ProfilePage() {
         </div>
 
         <div className="profile-actions">
-          <button className="edit-profile-button">Edit Profile</button>
+          <button
+            className="edit-profile-button"
+            onClick={() => setShowProfilePicForm(!showProfilePicForm)}
+          >
+            {showProfilePicForm ? "Cancel" : "Set Profile Picture"}
+          </button>
         </div>
+
+        {updateMessage && (
+          <div
+            className={`update-message ${
+              updateMessage.includes("Failed") ? "error" : "success"
+            }`}
+          >
+            {updateMessage}
+          </div>
+        )}
+
+        {showProfilePicForm && (
+          <div className="profile-pic-form">
+            <form onSubmit={handleUpdateProfilePic}>
+              <div className="form-group">
+                <label htmlFor="profilePicPath">Profile Picture URL:</label>
+                <input
+                  type="text"
+                  id="profilePicPath"
+                  value={profilePicPath}
+                  onChange={(e) => setProfilePicPath(e.target.value)}
+                  placeholder="Enter URL to your profile picture"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                className="update-pic-button"
+                disabled={isLoading}
+              >
+                {isLoading ? "Updating..." : "Update Picture"}
+              </button>
+            </form>
+          </div>
+        )}
 
         <div className="user-posts-section">
           <h3>My Posts</h3>
-          {isLoading ? (
+          {isLoading && !showProfilePicForm ? (
             <p>Loading posts...</p>
           ) : error ? (
             <p className="error-message">{error}</p>
