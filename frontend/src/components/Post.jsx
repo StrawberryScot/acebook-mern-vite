@@ -29,6 +29,7 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
   // Get the current user from Redux store
   const user = useSelector((state) => state.user.user);
 
+
   // Check if the current user is the author of the post
   const isAuthor = user && post.postedBy === user._id;
 
@@ -51,6 +52,8 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
   // Track which comments have visible replies
   const [visibleReplies, setVisibleReplies] = useState({});
 
+  const [posterStatus, setPosterStatus] = useState("offline");
+
   // Default profile picture path
   const DEFAULT_PROFILE_PIC = images.default_avatar;
 
@@ -69,12 +72,14 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
     }
   }, [post]);
 
+  console.log("post.postedBy:", post.postedBy)
   useEffect(() => {
     const fetchPosterInfo = async () => {
       try {
         if (!post.postedBy) {
           setPosterName("Unknown User");
           setPosterProfilePic(DEFAULT_PROFILE_PIC);
+          setPosterStatus("offline")
           return;
         }
 
@@ -88,7 +93,7 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
 
         // Try the /profile endpoint first
         let response = await fetch(
-          `http://localhost:3000/users/${postedById}/profile`
+          `http://localhost:3000/users/${postedById}/completeProfile`
         );
 
         // If /profile fails, fall back to /name
@@ -106,6 +111,7 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
         }
 
         const data = await response.json();
+        console.log("API Response data:", data);
         debugLog("Poster data received", data);
 
         // Check what fields we actually get back from the API
@@ -128,6 +134,12 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
               data.avatar ||
               DEFAULT_PROFILE_PIC
           );
+
+          if (data.status) {
+            setPosterStatus(data.status);
+          } else {
+            setPosterStatus("offline");
+          }
         } else {
           throw new Error("No user data received");
         }
@@ -135,11 +147,28 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
         console.error("Error fetching poster info:", error);
         setPosterName("Unknown User");
         setPosterProfilePic(DEFAULT_PROFILE_PIC);
+        setPosterStatus("offline")
       }
     };
 
     fetchPosterInfo();
   }, [post.postedBy]);
+
+
+  const getStatusIndicatorStyles = (status) => {
+    
+    switch (status) {
+      case "online":
+        return "status-online"; 
+      case "busy":
+        return "status-busy"; 
+      case "offline":
+      default:
+        return "status-offline";
+        
+    }
+    
+  };
 
   // Fetching comment and reply user names
   useEffect(() => {
@@ -672,6 +701,8 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
             e.target.src = DEFAULT_PROFILE_PIC;
           }}
         />
+        <div className={`status-indicator ${getStatusIndicatorStyles(posterStatus)}`} 
+          title={`Status: ${posterStatus}`}></div>
         <div className="post-subheader">
           <div className="post-author-info">
             <strong className="posterName">{posterName} says:</strong>

@@ -37,8 +37,8 @@ export function Navbar() {
                 onClick={handleViewProfile}
                 alt="Profile"
                 className="profile-pic"
-              />
-              <div className={`status-indicator ${getStatusClass()}`}></div>
+              /><div className={`status-indicator ${getStatusClass()}`}></div>
+              
             </div>
             <div>
               <LogoutButton />
