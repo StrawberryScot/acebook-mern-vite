@@ -254,6 +254,22 @@ const getFriends = async (req, res) => {
   }
 };
 
+const searchFriends = async (req, res) => {
+  const query = req.query.query;
+    if (!query) return res.status(400).json({ error: "Query is required" });
+
+    const regex = new RegExp(query, "i"); // case-insensitive
+    const users = await User.find({
+        $or: [
+            { firstName: regex },
+            { lastName: regex },
+            { email: regex },
+    ],
+    }).limit(10);
+
+    res.status(200).json(users);
+}
+
 const UsersController = {
   create,
   getUserByToken,
@@ -262,7 +278,8 @@ const UsersController = {
   updateUserProfile: updateUserProfile,
   addFriend: addFriend,
   getUserProfile: getUserProfile,
-  getFriends: getFriends
+  getFriends: getFriends,
+  searchFriends
 };
 
 module.exports = UsersController;

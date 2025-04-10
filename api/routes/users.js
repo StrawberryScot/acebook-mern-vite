@@ -3,6 +3,7 @@ const UsersController = require("../controllers/users");
 
 const router = express.Router();
 
+router.get("/search", UsersController.searchFriends);
 router.post("/", UsersController.create);
 router.get("/:id/name", UsersController.getNameById);
 router.get("/:id/profile", UsersController.getUserProfileById);
