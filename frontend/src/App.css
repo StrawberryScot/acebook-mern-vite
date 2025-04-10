@@ -41,6 +41,7 @@
   background-color: #d69723;
   color: white;
   z-index: 3;
+  pointer-events: all;
 }
 
 .button:hover {
