@@ -12,7 +12,7 @@ const app = express();
 // Allow requests from any client
 // docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
 // docs: https://expressjs.com/en/resources/middleware/cors.html
-app.use(cors());
+app.use(cors({origin: "https://hivemind-zkjx.onrender.com"}));
 
 // Parse JSON request bodies, made available on `req.body`
 app.use(bodyParser.json());
