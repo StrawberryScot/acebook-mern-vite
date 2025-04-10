@@ -312,6 +312,7 @@ describe("/users", () => {
       expect(response.statusCode).toBe(200);
       expect(response.body.message).toBe('Friend added successfully');
       expect(coolUser.friends.includes(signedInUser._id.toString()));
+      expect(signedInUser.friends.includes(coolUser._id.toString()));
     })
 
     test("check that we get an error if userId does not exist", async () => {
@@ -363,5 +364,54 @@ describe("/users", () => {
       expect(response.statusCode).toBe(404);
       expect(response.body.message).toBe('Friend not found');
     })
+
+  })
+  describe("GET, check we get a list of user's friends", ()=> {
+    test("should return 200 and a list of user's friends", async () => {
+      // Create the friend (who will be added to the other user's friends list)
+      const friendUser = await User.create({
+        email: "john@example.com",
+        password: "password",
+        firstName: "John",
+        lastName: "Doe",
+        profilePicPath: "test-address",
+        status: "Online",
+        backgroundPicPath: "test-back-address",
+        isOnlyFriends: false,
+      });
+  
+      // Create the user who will request their friends
+      const mainUser = new User({
+        email: "main@example.com",
+        password: "password",
+        firstName: "Main",
+        lastName: "User",
+        profilePicPath: "main-pic",
+        status: "Online",
+        backgroundPicPath: "bg-pic",
+        isOnlyFriends: false,
+        friends: [friendUser._id.toString()],
+      });
+  
+      await mainUser.save();
+  
+      const token = createToken(mainUser._id.toString());
+  
+      const response = await request(app)
+        .get(`/users/${mainUser._id.toString()}/getFriends`)
+        .set("Authorization", `Bearer ${token}`);
+  
+      expect(response.statusCode).toBe(200);
+      expect(Array.isArray(response.body)).toBe(true);
+      expect(response.body.length).toBe(1);
+      expect(response.body[0]).toMatchObject({
+        id: friendUser._id.toString(),
+        firstName: "John",
+        lastName: "Doe",
+        email: "john@example.com",
+        profilePicPath: "test-address",
+        status: "Online",
+      });
+    });
   })
 });

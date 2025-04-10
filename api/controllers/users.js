@@ -155,9 +155,15 @@ const addFriend = async (req, res) => {
     if (!friend) {
       return res.status(404).json({ message: "Friend not found" });
     }
-
-    friend.friends.push(userSignedIn);
+    if (!friend.friends.includes(userSignedIn)){
+      friend.friends.push(userSignedIn);
+      user.friends.push(friendToAdd);
+    } else {
+      console.log('already friends');
+      return res.status(200).json({message: 'Already friends'})
+    }
     await friend.save();
+    await user.save();
     return res.status(200).json({ message: "Friend added successfully" });
   } catch (error) {
     console.error("addFriend function has an error: ", error);
@@ -185,7 +191,7 @@ const getUserProfile = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
+    console.log(user.friends);
     const isFriend = user.friends.includes(requestingUserId);
 
     const userProfile = {
@@ -215,6 +221,39 @@ const getUserProfile = async (req, res) => {
   }
 };
 
+const getFriends = async (req, res) => {
+  //get the ids from the request of person adding, and person to be added
+  //find the users using the ids
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'no user found' });
+    }
+
+    const friends = await Promise.all(
+      user.friends.map((friendId) => User.findById(friendId))
+    );
+
+    const sanitizedFriends = friends
+      .filter((friend) => friend !== null)
+      .map((friend) => ({
+        id: friend._id.toString(),
+        firstName: friend.firstName,
+        lastName: friend.lastName,
+        email: friend.email,
+        profilePicPath: friend.profilePicPath,
+        status: friend.status,
+      }));
+
+    return res.status(200).json(sanitizedFriends);
+  } catch (error) {
+    console.error("Error in getFriends:", error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
 const UsersController = {
   create,
   getUserByToken,
@@ -223,6 +262,7 @@ const UsersController = {
   updateUserProfile: updateUserProfile,
   addFriend: addFriend,
   getUserProfile: getUserProfile,
+  getFriends: getFriends
 };
 
 module.exports = UsersController;

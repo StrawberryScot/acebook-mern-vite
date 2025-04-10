@@ -1,0 +1,73 @@
+/* AddFriendButton.css */
+
+/* Button initial style */
+.add-friend-button {
+    background-color: #fff8ed;
+    color: #8c5e00;
+    border: 2px solid #d5962d;
+    border-radius: 20px;
+    padding: 8px 20px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 1px 4px rgba(213, 150, 45, 0.2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  
+  .add-friend-button:hover {
+    background-color: #d5962d;
+    color: white;
+    box-shadow: 0 2px 6px rgba(213, 150, 45, 0.4);
+    transform: translateY(-1px);
+  }
+  
+  /* Animation for button click */
+  .add-friend-button.clicked {
+    animation: buttonClickAnimation 0.3s ease-out;
+  }
+  
+  /* Button click animation */
+  @keyframes buttonClickAnimation {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  /* Spinner for loading state */
+  .spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #d5962d;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+  }
+  
+  /* Spin animation */
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Already friends message */
+  .already-friends {
+    color: #4CAF50;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+  }
+  

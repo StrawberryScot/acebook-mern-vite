@@ -76,6 +76,31 @@ export async function addFriend(token, friendUserId) {
   return data;
 }
 
+export async function getFriends(token, friendUserId) {
+  if (!friendUserId) {
+    throw new Error("friendUserId is required");
+  }
+
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await fetch(
+    `${BACKEND_URL}/users/${friendUserId}/getFriends`,
+    requestOptions
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Unable to check friend");
+  }
+  const data = await response.json();
+  return data;
+}
+
 //get user from token
 // Simple function to extract user ID from token
 function extractUserIdFromToken(token) {
