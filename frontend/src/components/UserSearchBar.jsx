@@ -80,7 +80,7 @@ const UserSearchBar = () => {
             className="search-input"
             onFocus={() => setShowDropdown(true)}
         />
-        <button type="submit" className="search-button">Search</button>
+        
         </form>
 
         {showDropdown && dropdownUsers.length > 0 && (

@@ -18,6 +18,8 @@
     padding: 8px;
     border-radius: 10px;
     border: 2px solid #d5962d;
+    z-index: 6;
+
   }
   
   .search-button {
@@ -25,7 +27,7 @@
     background-color: #d5962d;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 10px;
     cursor: pointer;
   }
   
