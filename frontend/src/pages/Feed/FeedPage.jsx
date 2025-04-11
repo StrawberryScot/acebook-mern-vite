@@ -6,6 +6,7 @@ import Post from "../../components/Post";
 import CreatePostForm from "../../components/CreatePostForm";
 import { HivemindLogo } from "../../components/HivemindLogo";
 import LogoutButton from "../../components/LogoutButton";
+import UserSearchBar from "../../components/UserSearchBar";
 
 import { Navbar } from "../../components/navbar/Navbar";
 import "../../App.css";
@@ -45,8 +46,10 @@ export function FeedPage() {
   return (
     <div className="page-container">
       <Navbar />
-
+      
+      <UserSearchBar />
       <div className="content-container">
+
         <div className="header-container"></div>
         <div className="feed" role="feed">
           <CreatePostForm onPostCreated={handlePostCreated} />
