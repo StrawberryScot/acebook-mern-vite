@@ -5,12 +5,15 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 //fakes localstorage because we are a test suite not a browser
 import { configureStore } from '@reduxjs/toolkit';
+//more helper functions!
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
 import Post from '../../src/components/Post';
 //this one allows us to use certain things in the test like expect.tohave that otherwise wouldn't work, I think because the frontend is using vite??
 import '@testing-library/jest-dom';
 
-// Mocks certain dependencies, like sub components, because otherwise we'd have double import and dependencies, and I couldn't get those to work but I know this does.
+//  Mocks certain dependencies, like components that the component we are testing gets
+//  from other components, because otherwise we'd have double import and dependencies,
+//  and I couldn't get those to work but I know this does.
 vi.mock('./LikeButton', () => ({
   default: ({ post, onLikeUpdated }) => (
     <button onClick={() => onLikeUpdated && onLikeUpdated(post)}>
@@ -240,7 +243,7 @@ describe('Post Component', () => {
       expect(screen.getByText(/Test User says:/i)).toBeInTheDocument();
     });
     
-    // Edit and delete buttons should not be visible
+    // edit/delete arent visible because youre not the author!
     expect(screen.queryByText('Edit Post')).not.toBeInTheDocument();
     expect(screen.queryByText('Delete Post')).not.toBeInTheDocument();
   });
@@ -258,25 +261,14 @@ describe('Post Component', () => {
         </BrowserRouter>
       </Provider>
     );
-    
-    // Initially comments should be hidden
+    //toggles comments off/on below
     expect(screen.getByText(/Show Comments/)).toBeInTheDocument();
-    
-    // Click to show comments
     fireEvent.click(screen.getByText(/Show Comments/));
-    
-    // Comments should now be visible
     expect(screen.getByText(/Hide Comments/)).toBeInTheDocument();
-    
-    // We should see the comment text
     await waitFor(() => {
       expect(screen.getByText('This is a comment')).toBeInTheDocument();
     });
-    
-    // Click to hide comments
     fireEvent.click(screen.getByText(/Hide Comments/));
-    
-    // Comments toggle should change back
     expect(screen.getByText(/Show Comments/)).toBeInTheDocument();
   });
 
@@ -294,10 +286,7 @@ describe('Post Component', () => {
       </Provider>
     );
     
-    // Click to show comments
     fireEvent.click(screen.getByText(/Show Comments/));
-    
-    // Comment form should be visible
     expect(screen.getByPlaceholderText('Write a comment...')).toBeInTheDocument();
     expect(screen.getByText('Post Comment')).toBeInTheDocument();
   });
@@ -318,17 +307,12 @@ describe('Post Component', () => {
       </Provider>
     );
     
-    // Click to show comments
     fireEvent.click(screen.getByText(/Show Comments/));
-    
-    // Fill in the comment form
     const commentInput = screen.getByPlaceholderText('Write a comment...');
     fireEvent.change(commentInput, { target: { value: 'New comment' } });
-    
-    // Submit the form
     fireEvent.click(screen.getByText('Post Comment'));
     
-    // Verify the fetch was called correctly
+    // Verify the fetch worked
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
         `http://localhost:3000/posts/${mockPost._id}/comment`,
@@ -343,7 +327,7 @@ describe('Post Component', () => {
       );
     });
     
-    // Verify that onPostUpdated was called
+    // Check that clicking on the frontend actually calls the function it attaches to
     expect(mockOnPostUpdated).toHaveBeenCalled();
   });
 
@@ -361,19 +345,12 @@ describe('Post Component', () => {
       </Provider>
     );
     
-    // Click to show comments
     fireEvent.click(screen.getByText(/Show Comments/));
-    
-    // Wait for comments to load
     await waitFor(() => {
       expect(screen.getByText('This is a comment')).toBeInTheDocument();
     });
-    
-    // Click to show replies
-    fireEvent.click(screen.getByText(/Show Replies/));
-    
-    // Wait for replies to be visible
-    await waitFor(() => {
+        fireEvent.click(screen.getByText(/Show Replies/));
+        await waitFor(() => {
       expect(screen.getByText('This is a reply')).toBeInTheDocument();
     });
   });
@@ -392,19 +369,12 @@ describe('Post Component', () => {
       </Provider>
     );
     
-    // Click to show comments
     fireEvent.click(screen.getByText(/Show Comments/));
-    
-    // Wait for comments to load
     await waitFor(() => {
       expect(screen.getByText('This is a comment')).toBeInTheDocument();
     });
-    
-    // Click reply button on the comment
     const replyButtons = screen.getAllByText('Reply');
     fireEvent.click(replyButtons[0]);
-    
-    // Reply form should be visible
     expect(screen.getByPlaceholderText('Write a reply...')).toBeInTheDocument();
     expect(screen.getByText('Post Reply')).toBeInTheDocument();
     expect(screen.getByText('Cancel')).toBeInTheDocument();
@@ -426,23 +396,15 @@ describe('Post Component', () => {
       </Provider>
     );
     
-    // Click to show comments
     fireEvent.click(screen.getByText(/Show Comments/));
-    
-    // Wait for comments to load
     await waitFor(() => {
       expect(screen.getByText('This is a comment')).toBeInTheDocument();
     });
-    
-    // Click reply button on the comment
     const replyButtons = screen.getAllByText('Reply');
     fireEvent.click(replyButtons[0]);
-    
-    // Fill in the reply form
+    //fil form
     const replyInput = screen.getByPlaceholderText('Write a reply...');
     fireEvent.change(replyInput, { target: { value: 'New reply' } });
-    
-    // Submit the reply
     fireEvent.click(screen.getByText('Post Reply'));
     
     // Verify the fetch was called correctly
@@ -460,7 +422,7 @@ describe('Post Component', () => {
       );
     });
     
-    // Verify that onPostUpdated was called
+    // Verify our attached func was called after frontend click
     expect(mockOnPostUpdated).toHaveBeenCalled();
   });
 
@@ -478,25 +440,14 @@ describe('Post Component', () => {
       </Provider>
     );
     
-    // Click to show comments
     fireEvent.click(screen.getByText(/Show Comments/));
-    
-    // Wait for comments to load
     await waitFor(() => {
       expect(screen.getByText('This is a comment')).toBeInTheDocument();
     });
-    
-    // Click reply button on the comment
     const replyButtons = screen.getAllByText('Reply');
     fireEvent.click(replyButtons[0]);
-    
-    // Reply form should be visible
     expect(screen.getByPlaceholderText('Write a reply...')).toBeInTheDocument();
-    
-    // Click cancel
     fireEvent.click(screen.getByText('Cancel'));
-    
-    // Reply form should be gone
     expect(screen.queryByPlaceholderText('Write a reply...')).not.toBeInTheDocument();
   });
 
@@ -514,34 +465,23 @@ describe('Post Component', () => {
       </Provider>
     );
     
-    // Click to show comments
     fireEvent.click(screen.getByText(/Show Comments/));
-    
-    // Wait for comments to load
     await waitFor(() => {
       expect(screen.getByText('This is a comment')).toBeInTheDocument();
     });
-    
-    // Click to show replies
     fireEvent.click(screen.getByText(/Show Replies/));
-    
-    // Wait for replies to be visible
     await waitFor(() => {
       expect(screen.getByText('This is a reply')).toBeInTheDocument();
     });
-    
-    // Get all reply buttons and click on the reply to a reply
     const replyButtons = screen.getAllByText('Reply');
-    // The second reply button should be for the reply
+    //  second reply button 
     fireEvent.click(replyButtons[1]);
     
-    // The reply form should include the username
     const replyInput = screen.getByPlaceholderText('Write a reply...');
     expect(replyInput.value).toContain('@');
   });
 
   test('handles API errors when fetching user info', async () => {
-    // Set up fetch to fail
     setupFailedFetch();
     
     render(
@@ -557,7 +497,7 @@ describe('Post Component', () => {
       </Provider>
     );
     
-    // It should fall back to "Unknown User"
+    // It should display "Unknown User"
     await waitFor(() => {
       expect(screen.getByText(/Unknown User says:/i)).toBeInTheDocument();
     });
@@ -595,17 +535,14 @@ describe('Post Component', () => {
       </Provider>
     );
     
-    // Click to show comments
     fireEvent.click(screen.getByText(/Show Comments/));
-    
-    // Fill in the comment form
     const commentInput = screen.getByPlaceholderText('Write a comment...');
     fireEvent.change(commentInput, { target: { value: 'New comment' } });
     
     // Submit the form
     fireEvent.click(screen.getByText('Post Comment'));
     
-    // Verify error handling
+    // check the error handling actually works
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Error posting comment'), expect.anything());
       expect(window.alert).toHaveBeenCalled();
@@ -651,23 +588,14 @@ describe('Post Component', () => {
         json: () => Promise.resolve({}),
       });
     });
-    
-    // Spy on console.error and alert
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.stubGlobal('alert', vi.fn());
-    
-    // Click reply button on the comment
     const replyButtons = screen.getAllByText('Reply');
     fireEvent.click(replyButtons[0]);
-    
-    // Fill in the reply form
     const replyInput = screen.getByPlaceholderText('Write a reply...');
     fireEvent.change(replyInput, { target: { value: 'New reply' } });
-    
-    // Submit a reply
     fireEvent.click(screen.getByText('Post Reply'));
     
-    // Verify error handlig
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Error posting reply'), expect.anything());
       expect(window.alert).toHaveBeenCalled();
