@@ -8,6 +8,8 @@ import { HivemindLogo } from "../../src/components/HivemindLogo";
 // for redux store state:
 import { Provider } from "react-redux";
 import { store } from "../../src/redux/store";
+import '@testing-library/jest-dom';
+
 
 describe("Home Page", () => {
     test("renders the HivemindLogo", () => {
@@ -15,9 +17,9 @@ describe("Home Page", () => {
         render(
         <HivemindLogo />
         );
-
-        const logo = screen.getByAltText("HiveMind");
-        expect(logo).to.exist;
+          
+        const logo = screen.getByRole("img", { name: /HiveMind/i });
+    expect(logo).toBeInTheDocument();
     });
 
     test("Displays a signup link", async () => {

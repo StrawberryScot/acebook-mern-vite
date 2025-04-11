@@ -7,5 +7,11 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
+    coverage: {
+      provider: "v8", // ✅ this is the only supported provider now
+      reporter: ["text", "lcov"],
+      reportsDirectory: "./coverage-report",
+      exclude: ["**/node_modules/**", "**/dist/**"],
+    },
   },
 });
