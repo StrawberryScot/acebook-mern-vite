@@ -10,11 +10,11 @@
 
 .navbar {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
   background-color: #7a785b00;
-
   position: fixed;
   top: 0; /* Position at the top of the viewport */
   left: 0; /* This is to ensure it starts from the left edge */
@@ -89,7 +89,7 @@ html {
 }
 
 .profile-pic-container:hover {
-  transform: scale(1.5);
+  transform: scale(1.1);
   cursor: pointer;
 }
 

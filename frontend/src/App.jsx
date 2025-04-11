@@ -1,8 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getUserByToken } from "./services/authentication";
 import { setUser, clearUser } from "./redux/userSlice";
+import { updateUserProfile } from "./services/Users";
 
 import "./App.css";
 import { HomePage } from "./pages/Home/HomePage";
@@ -42,7 +43,8 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const dispatch = useDispatch(); // for persisting login
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -58,6 +60,62 @@ function App() {
         });
     }
   }, [dispatch]);
+
+  // Handle page unload/close events
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      const token = localStorage.getItem("token");
+      if (user && user._id && token) {
+        // Create a synchronous request to update user status before page close
+        // Using sendBeacon API which is designed for this purpose
+        const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+        const url = `${BACKEND_URL}/users/${user._id}/updateProfile`;
+        const blob = new Blob([JSON.stringify({ status: "offline" })], {
+          type: "application/json",
+        });
+
+        // Add the Authorization header to the Beacon request
+        navigator.sendBeacon(url, blob);
+      }
+    };
+
+    // Add event listener for page close/refresh
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // Clean up the event listener
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [user]);
+
+  // Set up heartbeat to maintain online status
+  useEffect(() => {
+    let heartbeatInterval;
+
+    if (user && user._id) {
+      const token = localStorage.getItem("token");
+
+      // Set user as online when app loads
+      updateUserProfile(token, user._id, undefined, "online").catch((err) =>
+        console.error("Failed to update initial online status:", err)
+      );
+
+      // Update "online" status every 5 minutes to keep it active
+      heartbeatInterval = setInterval(() => {
+        if (token && user && user._id) {
+          updateUserProfile(token, user._id, undefined, "online").catch((err) =>
+            console.error("Failed to update heartbeat status:", err)
+          );
+        }
+      }, 5 * 60 * 1000); // 5 minutes
+    }
+
+    return () => {
+      if (heartbeatInterval) {
+        clearInterval(heartbeatInterval);
+      }
+    };
+  }, [user]);
 
   return (
     <>
