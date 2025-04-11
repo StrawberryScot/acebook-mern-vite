@@ -1,11 +1,11 @@
 .logo {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    filter: drop-shadow(0 0 0.2rem #d69723);
-    padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  filter: drop-shadow(0 0 0.2rem #d69723);
+  padding: 1.5rem;
 }
 
 .logo img {
-    height: 5rem;
+  height: 5rem;
 }
