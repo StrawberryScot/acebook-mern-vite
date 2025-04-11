@@ -91,6 +91,13 @@ textarea {
   z-index: 3;
 }
 
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: #d69723;
+  box-shadow: 0 0 0 3px #d6972361;
+}
+
 button {
   position: relative;
   z-index: 3;
