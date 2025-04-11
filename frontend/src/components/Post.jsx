@@ -691,24 +691,28 @@ function Post({ post, onPostDeleted, onPostUpdated, onLikeUpdated }) {
   return (
     <article className="post" key={post._id}>
       <div className="post-header">
-        <img
-          src={posterProfilePic || DEFAULT_PROFILE_PIC}
-          alt="Profile"
-          className="profile-picture"
-          onClick={handleViewAnotherUsersProfile}
-          onError={(e) => {
-            console.log("Image error, using default");
-            e.target.src = DEFAULT_PROFILE_PIC;
-          }}
-        />
-        <div className={`status-indicator ${getStatusIndicatorStyles(posterStatus)}`} 
-          title={`Status: ${posterStatus}`}></div>
-        <div className="post-subheader">
-          <div className="post-author-info">
-            <strong className="posterName">{posterName} says:</strong>
-            <p className="post-date">Posted {formatDate(post.createdAt)}</p>
-          </div>
-        </div>
+  <div className="profile-picture-container">
+    <img
+      src={posterProfilePic || DEFAULT_PROFILE_PIC}
+      alt="Profile"
+      className="profile-picture"
+      onClick={handleViewAnotherUsersProfile}
+      onError={(e) => {
+        console.log("Image error, using default");
+        e.target.src = DEFAULT_PROFILE_PIC;
+      }}
+    />
+    <div 
+      className={`status-indicator ${getStatusIndicatorStyles(posterStatus)}`} 
+      title={`Status: ${posterStatus}`}>
+    </div>
+  </div>
+  <div className="post-subheader">
+    <div className="post-author-info">
+      <strong className="posterName">{posterName} says:</strong>
+      <p className="post-date">Posted {formatDate(post.createdAt)}</p>
+    </div>
+  </div>
       </div>
 
       <p className="post-content">{post.text}</p>

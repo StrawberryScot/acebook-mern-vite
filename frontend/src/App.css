@@ -82,13 +82,20 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
     padding: 0 1rem;
 }
 
 textarea {
   position: relative;
   z-index: 3;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: #d69723;
+  box-shadow: 0 0 0 3px #d6972361;
 }
 
 button {
