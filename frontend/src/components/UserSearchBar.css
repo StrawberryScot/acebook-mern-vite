@@ -4,7 +4,8 @@
 
 .user-search-container {
     position: relative;
-    width: 300px;
+    width: 100%;
+    padding: 0px 0px 12px 0px; 
   }
   
   .search-form {
@@ -15,8 +16,8 @@
   .search-input {
     flex: 1;
     padding: 8px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+    border-radius: 10px;
+    border: 2px solid #d5962d;
   }
   
   .search-button {

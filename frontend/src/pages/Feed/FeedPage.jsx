@@ -46,12 +46,10 @@ export function FeedPage() {
   return (
     <div className="page-container">
       <Navbar />
-      
-      <UserSearchBar />
       <div className="content-container">
-
         <div className="header-container"></div>
         <div className="feed" role="feed">
+        <UserSearchBar />
           <CreatePostForm onPostCreated={handlePostCreated} />
           {posts.map((post, index) => (
             <div
