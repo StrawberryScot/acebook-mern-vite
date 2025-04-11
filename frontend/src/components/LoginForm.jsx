@@ -5,6 +5,7 @@ import { getUserByToken, login } from "../services/authentication";
 import InputBox from "./InputBox";
 import { useDispatch } from "react-redux";
 import { setUser } from "../redux/userSlice";
+import { updateUserProfile } from "../services/Users";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
@@ -20,6 +21,18 @@ export function LoginForm() {
       localStorage.setItem("token", token);
       // Get the user data given the token
       const user = await getUserByToken(token);
+      // Update the user's status to online in the backend
+      if (user && user._id) {
+        try {
+          await updateUserProfile(token, user._id, undefined, "online");
+          console.log("User status set to online");
+          // Update the local user object with the online status
+          user.status = "online";
+        } catch (statusError) {
+          console.error("Failed to update status on login:", statusError);
+          // Continue with login even if status update fails
+        }
+      }
       // Update the user in the redux store
       dispatch(setUser(user));
 
