@@ -6,6 +6,8 @@ import { HomePage } from "../../src/pages/Home/HomePage";
 // for redux store state:
 import { Provider } from "react-redux";
 import { store } from "../../src/redux/store";
+import '@testing-library/jest-dom';
+
 
 describe("Home Page", () => {
     test("welcomes you to the site", () => {
@@ -18,8 +20,8 @@ describe("Home Page", () => {
             </Provider>
         );
 
-        const heading = screen.getByRole("heading");
-        expect(heading.textContent).toEqual("Welcome to HiveMind!");
+        const logo = screen.getByRole("img", { name: /HiveMind/i });
+    expect(logo).toBeInTheDocument();
     });
 
     test("Displays a signup link", async () => {
