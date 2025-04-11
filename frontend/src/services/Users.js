@@ -95,22 +95,23 @@ export async function getFriends(token, friendUserId) {
   );
 
   if (response.status !== 200) {
-    throw new Error("Unable to chgit eck friend");
+    throw new Error("Unable to get friends");
   }
   const data = await response.json();
   return data;
 }
 
 export async function searchUsers(query) {
-  console.log('query in search bar is ', query);
-  const res = await fetch(`${BACKEND_URL}/users/search?query=${encodeURIComponent(query)}`);
-  console.log('res is ', res);
+  console.log("query in search bar is ", query);
+  const res = await fetch(
+    `${BACKEND_URL}/users/search?query=${encodeURIComponent(query)}`
+  );
+  console.log("res is ", res);
   if (!res.ok) {
     throw new Error("Failed to search users");
   }
-  return await res.json(); 
-};
-
+  return await res.json();
+}
 
 //get user from token
 // Simple function to extract user ID from token
